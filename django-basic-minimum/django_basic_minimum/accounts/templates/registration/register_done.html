@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Register done{% endblock %} 
+
+{% block content %}
+
+	<!--Password reset sent-->
+  	<h1 class="font-weight-bold mt-3">Register done</h2>
+	<hr>
+
+	<p>New user has been created.</p>
+	<p> Username: <b>{{new_user_name}}</b></p>
+	<p> Email: <b>{{new_user_email}}</b></p>
+    <p class="text-left">Now you can <a href="/accounts/login">login</a> with the username and password.</p>
+
+{% endblock %}

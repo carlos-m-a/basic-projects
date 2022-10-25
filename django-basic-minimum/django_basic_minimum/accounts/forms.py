@@ -24,7 +24,8 @@ class NewUserForm(UserCreationForm):
 class UpdateUserForm(forms.ModelForm):
     username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
-    current_password = forms.CharField(widget=forms.PasswordInput(), required=True)
+    current_password = forms.CharField(widget=forms.PasswordInput(), required=True,
+                                        label='Your current password', help_text='*Password is required to allow this action')
 
     class Meta:
         model = User
