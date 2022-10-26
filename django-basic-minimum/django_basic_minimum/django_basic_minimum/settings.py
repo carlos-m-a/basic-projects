@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'base',
     'accounts',
     'app1',
-    'app2',
     
     'django.contrib.auth',
     'django.contrib.admin',
