@@ -76,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'base.context_processors.base_data'
             ],
         },
     },
@@ -158,3 +159,5 @@ MESSAGE_TAGS = {
 LOGIN_URL='/accounts/login/'
 LOGIN_REDIRECT_URL='/home'
 LOGOUT_REDIRECT_URL='/'
+
+SITE_DOMAIN_NAME = env('SITE_DOMAIN_NAME')

@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 
 
-# Create your forms here.
-
 class NewUserForm(UserCreationForm):
 	email = forms.EmailField(required=True)
 
@@ -39,6 +37,7 @@ class UpdateUserForm(forms.ModelForm):
             self.add_error('username','This username already exists')
         if not check_password(current_password, self.instance.password):
             self.add_error('current_password', 'Incorrect password')
+
 
 class DeleteUserForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(), required=True)

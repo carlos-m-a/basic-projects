@@ -7,11 +7,13 @@ from django.views import generic
 from .forms import NewUserForm, UpdateUserForm, DeleteUserForm
 from django.contrib.auth.hashers import check_password
 
+
 VIEW_PROFILE_TEMPLATE_FILE = 'profile/profile.html'
 UPDATE_PROFILE_TEMPLATE_FILE = 'profile/update.html'
 DELETE_PROFILE_TEMPLATE_FILE = 'profile/delete.html'
 REGISTER_USER_TEMPLATE_FILE = 'registration/register.html'
 REGISTER_USER_DONE_TEMPLATE_FILE = 'registration/register_done.html'
+
 
 class RegisterView(generic.CreateView):
     form_class = NewUserForm

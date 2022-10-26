@@ -5,7 +5,6 @@ from django.views.generic.base import RedirectView
 
 app_name = 'base'
 
-
 urlpatterns = [
     path("home", views.home, name="home"),
     path("", views.index, name="index"),

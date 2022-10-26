@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,19 +10,19 @@
     {% load static %}
     <link rel="shortcut icon" type="image/png" href="{% static 'base/favicon.ico' %}"/>
 
-    <title>{% block title %}{% endblock title %} | WebName</title>
-  </head>
-  <body>
+    <title>{% block title %}{% endblock title %} | {{SITE_DOMAIN_NAME}}</title>
+</head>
+<body>
 
     {% include 'base/navbar.html' %}
 
     {% include 'base/messages.html' %}
 
     <div class="container-fluid" style="margin-top:80px">
-    {% block content %}
+        {% block content %}
 
-    {% endblock %}
+        {% endblock %}
     </div>
       
-  </body>
+</body>
 </html>

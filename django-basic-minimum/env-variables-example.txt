@@ -41,3 +41,6 @@ USE_TZ=True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL=static/
+
+# Name of your web (not the url, without www or .com)
+SITE_DOMAIN_NAME=
