@@ -2,7 +2,7 @@
 
 ## Description
 
-Minimum django project for quick starts.
+Minimum django project for quick start.
 It contains a basic accounts app and the 'base' app. Both use the default django utilities and cofigurations for authentication and basic templates to extend.
 
 Accounts app handles every authentication use case and the updatings of user accounts. Since it uses django auth and it doesn't change django.auth operation, note that:
@@ -21,7 +21,7 @@ The  apps of this projects are:
 * Clone this repository
 * Create a virtual environment (e.g.:'venv' with virtualenv)
 * Create a database in your local RDBMS for this project
-* Create a '.env' from 'env-variables-example.txt', in the same folder that 'settings.py', and fill every single field with your local/custom data
+* Create a '.env' from 'env-variables-example.txt', in the same folder that 'settings.py', and fill every single field with your local-custom data
 * Install every package in requeriments.txt (pip install -r requeriments.txt)
 * python manage.py makemigrations
 * python manage.py migrate

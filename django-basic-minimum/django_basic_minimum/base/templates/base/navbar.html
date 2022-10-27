@@ -32,7 +32,12 @@
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">{{user.username}}</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    <li>
+                        <form  action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <input class="dropdown-item" type="submit" value="Logout">
+                        </form>
+                    </li>
                 </ul>
             </li>
           {% endif %}
