@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import environ
 from pathlib import Path
 from django.contrib.messages import constants as messages
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +36,10 @@ INSTALLED_APPS = [
     'base',
     'accounts',
     'app1',
+    'app2',
     
-    'django.contrib.auth',
     'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,8 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_basic.urls'
@@ -75,7 +75,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'base.context_processors.base_data'
             ],
         },
     },
@@ -99,13 +98,10 @@ DATABASES = {
 
 # FOR EMAILS (reset passwords, etc)
 EMAIL_BACKEND = env('EMAIL_BACKEND')
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_TIMEOUT = env('EMAIL_TIMEOUT')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+SITE_DOMAIN = env('SITE_DOMAIN')
+SITE_NAME = env('SITE_NAME')
+SITE_PROTOCOL = env('SITE_PROTOCOL') # http or https
+SITE_NOTIFICATION_EMAIL = env('SITE_NOTIFICATION_EMAIL')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -140,7 +136,6 @@ USE_TZ = env('USE_TZ')
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = env('STATIC_URL')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'base/static'),]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -155,8 +150,4 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
-LOGIN_URL='/accounts/login/'
-LOGIN_REDIRECT_URL='/home'
-LOGOUT_REDIRECT_URL='/'
-
-SITE_DOMAIN_NAME = env('SITE_DOMAIN_NAME')
+LOGIN_URL='accounts/login/'

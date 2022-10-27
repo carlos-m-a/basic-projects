@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+
+{% block title %}Profile{% endblock %} 
+
+{% block content %}
+
+    {% load crispy_forms_tags %}
+
+    <!--Profile--> 
+    <h1 class="font-weight-bold mt-3">Profile</h2>
+    <hr>
+  
+    <dt>Username</dt>
+    <dd>{{user.username}}</dd>
+    <dt>Email</dt>
+    <dd>{{user.email}}</dd>
+    {% if user.first_name %}
+        <dt>First name</dt>
+        <dd>{{user.first_name}}</dd>
+    {% endif %}
+    {% if user.last_name %}
+      <dt>Last name</dt>
+      <dd>{{user.last_name}}</dd>
+    {% endif %}
+    </dl>     
+  
+    <a href="{% url 'accounts:update' %}" class="btn btn-primary">Update</a>
+    <a href="{% url 'password_change' %}" class="btn btn-primary">Change password</a>
+    <a href="{% url 'accounts:delete' %}" class="btn btn-danger">Delete</a>
+
+{% endblock %}
