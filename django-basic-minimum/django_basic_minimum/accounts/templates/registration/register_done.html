@@ -11,6 +11,6 @@
 	<p>New user has been created.</p>
 	<p> Username: <b>{{new_user_name}}</b></p>
 	<p> Email: <b>{{new_user_email}}</b></p>
-    <p class="text-left">Now you can <a href="/accounts/login">login</a> with the username and password.</p>
+    <p class="text-left">Now you can <a href="{% url 'login' %}">login</a> with the username and password.</p>
 
 {% endblock %}
