@@ -1,4 +1,4 @@
-"""django_basic_minimum	 URL Configuration
+"""django_basic URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -20,11 +20,9 @@ urlpatterns = [
     path('', include('base.urls')),
 
     path('accounts/', include('accounts.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
   
     path('app1/', include('app1.urls')),
     path('admin/', admin.site.urls),
 
     path('__debug__/', include('debug_toolbar.urls')),
 ]
-
