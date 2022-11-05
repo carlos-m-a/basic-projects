@@ -16,9 +16,10 @@
 
     {% include 'base/navbar.html' %}
 
-    {% include 'base/messages.html' %}
-
     <div class="container-fluid" style="margin-top:80px">
+        
+        {% include 'base/messages.html' %}
+        
         {% block content %}
 
         {% endblock %}
