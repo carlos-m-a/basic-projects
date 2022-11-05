@@ -10,6 +10,7 @@ Accounts app handles every authentication use case and the updatings of user acc
 * That means users only can login with the username
 * That means that, in password resets, as many emails as users sharing the same email address will be sent to the user's email, and the users must be who decides the user account to reset its password
 * There isn't any limit to login attemps
+* Usernames can be made with any letter, not only ascii. E.g.: "Дмитро" would be correct
 * There isn't any email address verification by mail in the registration. Neither in the email updating.
 
 The  apps of this projects are:
