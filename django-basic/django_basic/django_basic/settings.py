@@ -161,4 +161,4 @@ LOGOUT_REDIRECT_URL='/'
 
 SITE_DOMAIN_NAME = env('SITE_DOMAIN_NAME')
 
-BASE_TEMPLATE='base/base.html'
+BASE_TEMPLATE_DIR='base/base.html'
