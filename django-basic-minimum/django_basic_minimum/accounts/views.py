@@ -1,18 +1,36 @@
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 from django.conf import settings
 from django.views import generic
 from .forms import NewUserForm, UpdateUserForm, DeleteUserForm
-from django.contrib.auth.hashers import check_password
+from django.contrib import messages
 
 
-VIEW_PROFILE_TEMPLATE_FILE = 'profile/profile.html'
-UPDATE_PROFILE_TEMPLATE_FILE = 'profile/update.html'
-DELETE_PROFILE_TEMPLATE_FILE = 'profile/delete.html'
-REGISTER_USER_TEMPLATE_FILE = 'registration/register.html'
-REGISTER_USER_DONE_TEMPLATE_FILE = 'registration/register_done.html'
+VIEW_PROFILE_TEMPLATE_FILE = 'accounts/profile.html'
+UPDATE_PROFILE_TEMPLATE_FILE = 'accounts/update.html'
+DELETE_PROFILE_TEMPLATE_FILE = 'accounts/delete.html'
+REGISTER_USER_TEMPLATE_FILE = 'accounts/register.html'
+REGISTER_USER_DONE_TEMPLATE_FILE = 'accounts/register_done.html'
+LOGIN_TEMPLATE_FILE = 'accounts/login.html'
+LOGOUT_TEMPLATE_FILE = 'accounts/logged_out.html'
+PASSWORD_CHANGE_TEMPLATE_FILE = 'accounts/password_change_form.html'
+PASSWORD_CHANGE_DONE_TEMPLATE_FILE = 'accounts/password_change_done.html'
+PASSWORD_RESET_TEMPLATE_FILE = 'accounts/password_reset_form.html'
+PASSWORD_RESET_DONE_TEMPLATE_FILE = 'accounts/password_reset_done.html'
+PASSWORD_RESET_CONFIRM_TEMPLATE_FILE = 'accounts/password_reset_confirm.html'
+PASSWORD_RESET_COMPLETE_TEMPLATE_FILE = 'accounts/password_reset_complete.html'
+EMAIL_TEMPLATE_FILE = 'accounts/password_reset_email.html'
+SUBJECT_EMAIL_TEMPLATE_FILE = 'accounts/password_reset_subject.txt'
+
+
+def raise_404_if_authenticated(request):
+    if request.user.is_authenticated:
+        raise Http404
 
 
 class RegisterView(generic.CreateView):
@@ -24,12 +42,68 @@ class RegisterView(generic.CreateView):
         context['new_user_name'] = form.cleaned_data['username']
         context['new_user_email'] = form.cleaned_data['email']
         return render(self.request, REGISTER_USER_DONE_TEMPLATE_FILE, context)
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return super().dispatch(request, *args, **kwargs)
 
+class NewLoginView(LoginView):
+    template_name = LOGIN_TEMPLATE_FILE
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return super().dispatch(request, *args, **kwargs)
+
+class NewLogoutView(LogoutView):
+    template_name = LOGOUT_TEMPLATE_FILE
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+class NewPasswordChangeView(PasswordChangeView):
+    template_name = PASSWORD_CHANGE_TEMPLATE_FILE
+    success_url = reverse_lazy('accounts:password_change_done')
+
+class NewPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = PASSWORD_CHANGE_DONE_TEMPLATE_FILE
+
+class NewPasswordResetView(PasswordResetView):
+    template_name = PASSWORD_RESET_TEMPLATE_FILE
+    email_template_name = EMAIL_TEMPLATE_FILE
+    subject_template_name = SUBJECT_EMAIL_TEMPLATE_FILE
+    success_url = reverse_lazy('accounts:password_reset_done')
+    def dispatch(self, request, *args, **kwargs):
+        raise_404_if_authenticated(request)
+        return super().dispatch(request, *args, **kwargs)
+
+class NewPasswordResetDoneView(PasswordResetDoneView):
+    template_name = PASSWORD_RESET_DONE_TEMPLATE_FILE
+    def dispatch(self, request, *args, **kwargs):
+        raise_404_if_authenticated(request)
+        return super().dispatch(request, *args, **kwargs)
+
+class NewPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = PASSWORD_RESET_CONFIRM_TEMPLATE_FILE
+    success_url=reverse_lazy('accounts:password_reset_complete')
+    def dispatch(self, request, *args, **kwargs):
+        raise_404_if_authenticated(request)
+        return super().dispatch(request, *args, **kwargs)
+
+class NewPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = PASSWORD_RESET_COMPLETE_TEMPLATE_FILE
+    def dispatch(self, request, *args, **kwargs):
+        raise_404_if_authenticated(request)
+        return super().dispatch(request, *args, **kwargs)
+
+
+@login_required
+def profile(request):
+    return render(request, VIEW_PROFILE_TEMPLATE_FILE)
 
 @login_required
 def update(request):
     if request.method == 'POST':
-        form = UpdateUserForm(request.POST, instance=request.user)
+        user = User.objects.get(id=request.user.id)
+        form = UpdateUserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('accounts:profile')
@@ -41,30 +115,22 @@ def update(request):
         context = {'form': form,}
         return render(request, UPDATE_PROFILE_TEMPLATE_FILE, context)
 
-
 @login_required
 def delete(request):
-    user:User = request.user
     if request.method == 'POST':
-        form = DeleteUserForm(request.POST)
+        user = User.objects.get(id=request.user.id)
+        form = DeleteUserForm(request.POST, instance=user)
         if form.is_valid():
-            password = form.cleaned_data['password']
-            if not check_password(password, user.password):
-                form.add_error('password', 'Incorrect password')
-                context = {'form': form,}
-                return render(request, DELETE_PROFILE_TEMPLATE_FILE, context)
-            else:
-                user.is_active = False
-                user.save()
-                logout(request)
-                return redirect(settings.LOGIN_URL)
+            user.is_active = False
+            user.save()
+            messages.success(request, 'User' + ' \"' + request.user.username + '\"' + " has been deleted" )
+            logout(request)
+            return redirect(settings.LOGIN_URL)
+        else:
+            context = {'form': form,}
+            return render(request, DELETE_PROFILE_TEMPLATE_FILE, context)
     else:
         form = DeleteUserForm()
         context = {'form': form,}
         return render(request, DELETE_PROFILE_TEMPLATE_FILE, context)
-
-
-@login_required
-def profile(request):
-    return render(request, VIEW_PROFILE_TEMPLATE_FILE)
             
