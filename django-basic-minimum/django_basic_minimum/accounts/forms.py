@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -49,7 +48,7 @@ class UpdateUserForm(forms.ModelForm):
 
     def clean_current_password(self):
         current_password = self.cleaned_data['current_password']
-        if not check_password(current_password, self.instance.password):
+        if not self.instance.check_password(current_password):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
 
@@ -69,6 +68,6 @@ class DeleteUserForm(forms.ModelForm):
 
     def clean_current_password(self):
         current_password = self.cleaned_data['current_password']
-        if not check_password(current_password, self.instance.password):
+        if not self.instance.check_password(current_password):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
