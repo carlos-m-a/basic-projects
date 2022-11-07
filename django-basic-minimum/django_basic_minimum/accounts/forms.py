@@ -1,12 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
 ERROR_MESSAGE_USERNAME_ALREADY_EXISTS = _('A user with that username already exists.')
 TEXT_PASSWORD_IS_REQUIRED = _('Password is required to allow this action')
+
+User = get_user_model()
 
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(

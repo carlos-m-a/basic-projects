@@ -1,7 +1,9 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from . import forms
+
+User = get_user_model()
 
 RANDOM_EMAIL_255_LENGTH = 'aaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaa@mail.com'
 RANDOM_STRING_151_LENGTH = 'aaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWa'
