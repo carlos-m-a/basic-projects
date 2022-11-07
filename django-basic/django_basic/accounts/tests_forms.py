@@ -1,7 +1,9 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from . import forms
+
+User = get_user_model()
 
 RANDOM_EMAIL_255_LENGTH = 'aaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaa@mail.com'
 RANDOM_STRING_151_LENGTH = 'aaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWaaaaaaaaaWa'
@@ -150,7 +152,7 @@ class UpdateUserFormTestCase(TestCase):
         data = {'username':'user2', 'email':'user1@mail.com', 'current_password':'jajajeje11'}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['username'], [forms.ERROR_MESSAGE_USERNAME_ALREADY_EXISTS])
+        self.assertEqual(form.errors['username'], ['A user with that username already exists.'])
         self.assertEqual(len(form.errors), 1)
 
     def test_incorrect_email(self):

@@ -1,14 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 from django.conf import settings
 from django.views import generic
 from .forms import NewUserForm, UpdateUserForm, DeleteUserForm
 from django.contrib import messages
+
+User = get_user_model()
 
 
 VIEW_PROFILE_TEMPLATE_FILE = 'accounts/profile.html'

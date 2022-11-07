@@ -107,6 +107,9 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_TIMEOUT = env('EMAIL_TIMEOUT')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
+
+# AUTHENTICATION
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -124,6 +127,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
+    'accounts.authentication.EmailAuthBackend'
+]
+
+AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL='/accounts/login/'
+LOGIN_REDIRECT_URL='/home'
+LOGOUT_REDIRECT_URL='/'
+PASSWORD_RESET_TIMEOUT=1800  #In seconds
 
 
 # Internationalization
@@ -155,10 +169,7 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
-LOGIN_URL='/accounts/login/'
-LOGIN_REDIRECT_URL='/home'
-LOGOUT_REDIRECT_URL='/'
 
+#Custon settings
 SITE_DOMAIN_NAME = env('SITE_DOMAIN_NAME')
-
 BASE_TEMPLATE_DIR='base/base.html'
