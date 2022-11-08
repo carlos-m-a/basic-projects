@@ -7,16 +7,18 @@
 
 {% load crispy_forms_tags %}         
 
-	<!--Register--> 
-	<h1 class="font-weight-bold mt-3">Register</h2>
-	<hr>
-	<form  action="{% url 'accounts:register' %}" method="post" class="post-form">
-		{% csrf_token %}
-		{{ form|crispy }}
-		<button class="btn btn-primary" type="submit">Register</button>
-	</form>
-	<div class="container-fluid mt-2">
-		<p class="text-left">If you already have an account, <a href="{% url 'accounts:login' %}">login</a> instead</p>
-	</div>
+<div class="container mt-3 mb-3">
+    <h1>Register</h1>
+    <form  action="{% url 'accounts:register' %}" method="post" class="post-form">
+        <div class="mb-2">
+            {% csrf_token %}
+            {{ form|crispy }}
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+    <div class="mt-3">
+        <p class="text-left">If you already have an account, <a href="{% url 'accounts:login' %}">login</a> instead</p>
+    </div>
+</div>
 
 {% endblock %}

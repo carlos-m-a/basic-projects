@@ -6,8 +6,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 from django.conf import settings
 from django.views import generic
-from .forms import NewUserForm, UpdateUserForm, DeleteUserForm
+from .forms import NewUserForm, UpdateUserForm, DeleteUserForm, NewAuthenticationForm, NewPasswordChangeForm, NewPasswordResetForm, NewSetPasswordForm
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -50,6 +51,7 @@ class RegisterView(generic.CreateView):
 
 class NewLoginView(LoginView):
     template_name = LOGIN_TEMPLATE_FILE
+    authentication_form = NewAuthenticationForm
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('/')
@@ -62,7 +64,11 @@ class NewLogoutView(LogoutView):
 
 class NewPasswordChangeView(PasswordChangeView):
     template_name = PASSWORD_CHANGE_TEMPLATE_FILE
-    success_url = reverse_lazy('accounts:password_change_done')
+    success_url = reverse_lazy('accounts:profile')
+    form_class = NewPasswordChangeForm
+    def form_valid(self, form):
+        messages.success(self.request, _('Password has changed'))
+        return super().form_valid(form)
 
 class NewPasswordChangeDoneView(PasswordChangeDoneView):
     template_name = PASSWORD_CHANGE_DONE_TEMPLATE_FILE
@@ -72,27 +78,36 @@ class NewPasswordResetView(PasswordResetView):
     email_template_name = EMAIL_TEMPLATE_FILE
     subject_template_name = SUBJECT_EMAIL_TEMPLATE_FILE
     success_url = reverse_lazy('accounts:password_reset_done')
+    form_class = NewPasswordResetForm
     def dispatch(self, request, *args, **kwargs):
-        raise_404_if_authenticated(request)
+        if request.user.is_authenticated:
+            return redirect('/')
         return super().dispatch(request, *args, **kwargs)
 
 class NewPasswordResetDoneView(PasswordResetDoneView):
     template_name = PASSWORD_RESET_DONE_TEMPLATE_FILE
     def dispatch(self, request, *args, **kwargs):
-        raise_404_if_authenticated(request)
+        if request.user.is_authenticated:
+            return redirect('/')
         return super().dispatch(request, *args, **kwargs)
 
 class NewPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = PASSWORD_RESET_CONFIRM_TEMPLATE_FILE
-    success_url=reverse_lazy('accounts:password_reset_complete')
+    success_url=reverse_lazy('accounts:login')
+    form_class = NewSetPasswordForm
     def dispatch(self, request, *args, **kwargs):
-        raise_404_if_authenticated(request)
+        if request.user.is_authenticated:
+            return redirect('/')
         return super().dispatch(request, *args, **kwargs)
+    def form_valid(self, form):
+        messages.success(self.request, _('Password has been reset'))
+        return super().form_valid(form)
 
 class NewPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = PASSWORD_RESET_COMPLETE_TEMPLATE_FILE
     def dispatch(self, request, *args, **kwargs):
-        raise_404_if_authenticated(request)
+        if request.user.is_authenticated:
+            return redirect('/')
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -107,6 +122,7 @@ def update(request):
         form = UpdateUserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, _('Profile has been updated'))
             return redirect('accounts:profile')
         else:
             context = {'form': form,}
@@ -124,7 +140,7 @@ def delete(request):
         if form.is_valid():
             user.is_active = False
             user.save()
-            messages.success(request, 'User' + ' \"' + request.user.username + '\"' + " has been deleted" )
+            messages.success(request, _('User') + ' \"' + request.user.username + '\"' + _(" has been deleted"))
             logout(request)
             return redirect(settings.LOGIN_URL)
         else:

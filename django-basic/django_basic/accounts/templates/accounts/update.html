@@ -7,14 +7,16 @@
 
 {% load crispy_forms_tags %}         
 
-	<!--Update--> 
-	<h1 class="font-weight-bold mt-3">Update profile</h2>
-	<hr>
-	<form  action="{% url 'accounts:update' %}" method="post" class="post-form">
-		{% csrf_token %}
-		{{ form|crispy }}
-		<button class="btn btn-primary" type="submit">Update</button>
-		<a href="{% url 'accounts:profile' %}" class="btn btn-dark">Cancel</a>
-	</form>
-	
+    <div class="container mt-3 mb-3">
+        <h1>Update profile</h1>
+        <form  action="{% url 'accounts:update' %}" method="post" class="post-form">
+            <div class="mb-2">
+                {% csrf_token %}
+                {{ form|crispy }}
+            </div>
+            <button class="btn btn-primary" type="submit">Update</button>
+            <a href="{% url 'accounts:profile' %}" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+
 {% endblock %}
