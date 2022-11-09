@@ -4,11 +4,12 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import logout, get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from django.views import generic
 from .forms import NewUserForm, UpdateUserForm, DeleteUserForm, NewAuthenticationForm, NewPasswordChangeForm, NewPasswordResetForm, NewSetPasswordForm
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView, CreateView
 
 User = get_user_model()
 
@@ -35,7 +36,7 @@ def raise_404_if_authenticated(request):
         raise Http404
 
 
-class RegisterView(generic.CreateView):
+class RegisterView(CreateView):
     form_class = NewUserForm
     template_name = REGISTER_USER_TEMPLATE_FILE
     def form_valid(self, form):
@@ -111,9 +112,9 @@ class NewPasswordResetCompleteView(PasswordResetCompleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-@login_required
-def profile(request):
-    return render(request, VIEW_PROFILE_TEMPLATE_FILE)
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = VIEW_PROFILE_TEMPLATE_FILE
+
 
 @login_required
 def update(request):
