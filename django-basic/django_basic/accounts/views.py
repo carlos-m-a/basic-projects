@@ -31,11 +31,6 @@ EMAIL_TEMPLATE_FILE = 'accounts/password_reset_email.html'
 SUBJECT_EMAIL_TEMPLATE_FILE = 'accounts/password_reset_subject.txt'
 
 
-def raise_404_if_authenticated(request):
-    if request.user.is_authenticated:
-        raise Http404
-
-
 class RegisterView(CreateView):
     form_class = NewUserForm
     template_name = REGISTER_USER_TEMPLATE_FILE
@@ -55,13 +50,13 @@ class NewLoginView(LoginView):
     authentication_form = NewAuthenticationForm
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return super().dispatch(request, *args, **kwargs)
 
 class NewLogoutView(LogoutView):
     template_name = LOGOUT_TEMPLATE_FILE
     def get(self, request, *args, **kwargs):
-        raise Http404
+        return redirect('/')
 
 class NewPasswordChangeView(PasswordChangeView):
     template_name = PASSWORD_CHANGE_TEMPLATE_FILE
@@ -114,7 +109,6 @@ class NewPasswordResetCompleteView(PasswordResetCompleteView):
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = VIEW_PROFILE_TEMPLATE_FILE
-
 
 @login_required
 def update(request):

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
+ERROR_MESSAGE_INCORRECT_LOGIN_DATA = _('Incorrect password or username-email')
 TEXT_PASSWORD_IS_REQUIRED = _('Current password is required to allow this action')
 
 User = get_user_model()
@@ -27,13 +28,12 @@ def get_password_field(is_confirmation:bool=False, is_new:bool=False, help_text_
         label=password_string,
         required=True,
         strip=False,
-        max_length=254,
+        max_length=150,
         widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':'form-control','placeholder':placeholder_string}),
     )
     if help_text_active:
         password_field.help_text = TEXT_PASSWORD_IS_REQUIRED
     return password_field
-
 
 def get_username_field():
     return UsernameField(
@@ -90,7 +90,7 @@ class NewAuthenticationForm(AuthenticationForm):
                 self.request, username=username, password=password
             )
             if self.user_cache is None:
-                raise self.get_invalid_login_error()
+                raise ValidationError(ERROR_MESSAGE_INCORRECT_LOGIN_DATA, code='invalid_login')
             else:
                 self.confirm_login_allowed(self.user_cache)
 
@@ -98,7 +98,6 @@ class NewAuthenticationForm(AuthenticationForm):
 
     def clean(self):
         return self.cleaned_data
-
 
 class NewUserForm(UserCreationForm):
     username = get_username_field()
@@ -137,7 +136,6 @@ class UpdateUserForm(forms.ModelForm):
         if not self.instance.check_password(current_password):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
-
 
 class DeleteUserForm(forms.ModelForm):
     current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
