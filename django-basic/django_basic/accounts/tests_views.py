@@ -46,6 +46,8 @@ class NonAllowedRequestsTestCase(TestCase):
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
         response = self.client.post(reverse('accounts:password_reset_complete'), follow=True)
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
+        response = self.client.get(reverse('accounts:logout'), follow=True)
+        self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
     def test_non_allowed_requests_for_non_authenticated_user(self):
         response = self.client.get(reverse('accounts:password_change'))
@@ -191,3 +193,61 @@ class RegisterTestCase(TestCase):
         self.assertEqual(User.objects.filter(username='user3').count(), 1)
         self.assertEqual(User.objects.all().count(), 2)
         self.assertEqual(User.objects.get(username='user3').email, 'user3@mail.com')
+
+
+class LoginTestCase(TestCase):
+    
+    def setUp(self):
+        user = User()
+        user.username = 'user1'
+        user.email = 'user1@mail.com'
+        user.set_password('jajajeje11')
+        user.save()
+        self.user = user
+        # self.client.login(username='user1', password='jajajeje11')
+
+    def test_load(self):
+        response = self.client.get(reverse('accounts:login'))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response, views.LOGIN_TEMPLATE_FILE)
+
+    def test_invalid_data(self):
+        data={'username':'user1', 'password':'incorrectpassword'}
+        response = self.client.post(reverse('accounts:login'), data=data)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response, views.LOGIN_TEMPLATE_FILE)
+        self.assertEqual(response.context['form'].cleaned_data['username'], 'user1')
+        self.assertEqual(type(response.context['form']), forms.NewAuthenticationForm)
+        self.assertEqual(len(response.context['form'].errors), 1)
+        #to check if user is NOT logged in
+        response = self.client.get(reverse('accounts:login'))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+    
+    def test_valid_data(self):
+        data={'username':'user1', 'password':'jajajeje11'}
+        response = self.client.post(reverse('accounts:login'), data=data)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
+        #to check if user is logged in
+        response = self.client.get(reverse('accounts:login'))
+        self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
+
+
+class LogoutTestCase(TestCase):
+    
+    def setUp(self):
+        user = User()
+        user.username = 'user1'
+        user.email = 'user1@mail.com'
+        user.set_password('jajajeje11')
+        user.save()
+        self.user = user
+        self.client.login(username='user1', password='jajajeje11')
+
+    def test_valid_logout(self):
+        response = self.client.post(reverse('accounts:logout'), data={})
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertRedirects(response, settings.LOGOUT_REDIRECT_URL)
+         #to check if user is NOT logged in
+        response = self.client.get(reverse('accounts:login'))
+        self.assertEqual(response.status_code, HTTPStatus.OK)

@@ -216,3 +216,78 @@ class DeleteUserFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['current_password'], [forms.ERROR_MESSAGE_INCORRECT_PASSWORD])
         self.assertEqual(len(form.errors), 1)
+
+
+class NewAuthenticationFormTestCase(TestCase):
+    
+    def setUp(self):
+        user = User()
+        user.username = 'user1'
+        user.email = 'user1@mail.com'
+        user.set_password('jajajeje11')
+        user.save()
+        self.user:User = user
+
+    def test_success_case(self):
+        data = {'username':'user1', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertTrue(form.is_valid())
+        self.assertEqual(len(form.errors), 0)
+        
+        data = {'username':'user1@mail.com', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertTrue(form.is_valid())
+        self.assertEqual(len(form.errors), 0)
+
+    def test_empty_fields(self):
+        form = forms.NewAuthenticationForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(len(form.errors), 2)
+        self.assertEqual(form.errors['username'], ['This field is required.'])
+        self.assertEqual(form.errors['password'], ['This field is required.'])
+        
+        data = {'username':'', 'password':''}
+        form = forms.NewAuthenticationForm(data=data)
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['username'], ['This field is required.'])
+        self.assertEqual(form.errors['password'], ['This field is required.'])
+        self.assertEqual(len(form.errors), 2)
+    
+    def test_max_length_fields(self):
+        data = {'username':RANDOM_EMAIL_255_LENGTH, 'password': RANDOM_STRING_151_LENGTH}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['username'], ['Ensure this value has at most 254 characters (it has 255).'])
+        self.assertEqual(form.errors['password'], ['Ensure this value has at most 150 characters (it has 151).'])
+        self.assertEqual(len(form.errors), 2)
+
+    def test_wrong_password(self):
+        data = {'username':'user1', 'password':'IncorrectPassword'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['password'], [forms.ERROR_MESSAGE_INCORRECT_LOGIN_DATA])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_non_existent_username(self):
+        data = {'username':'user3', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['password'], [forms.ERROR_MESSAGE_INCORRECT_LOGIN_DATA])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_non_existent_email(self):
+        data = {'username':'user3@mail.com', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['password'], [forms.ERROR_MESSAGE_INCORRECT_LOGIN_DATA])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_inactive_user(self):
+        self.user.is_active = False
+        self.user.save()
+        data = {'username':'user1', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['password'], [forms.ERROR_MESSAGE_INCORRECT_LOGIN_DATA])
+        self.assertEqual(len(form.errors), 1)
