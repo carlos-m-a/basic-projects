@@ -36,3 +36,9 @@ class RegistrationFormTestCase(TestCase):
 
         url = reverse('accounts:profile')
         self.assertEqual(url, '/accounts/profile/')
+
+        url = reverse('accounts:update_profile')
+        self.assertEqual(url, '/accounts/profile/update/')
+
+        url = reverse('accounts:update_email')
+        self.assertEqual(url, '/accounts/update_email/')

@@ -98,46 +98,44 @@ class UpdateUserFormTestCase(TestCase):
         self.user = user
 
     def test_success_case(self):
-        data = {'username':'user3', 'email':'user3@mail.com', 'current_password':'jajajeje11', 'first_name':'Name3', 'last_name':'Surname3'}
+        data = {'username':'user3', 'current_password':'jajajeje11', 'first_name':'Name3', 'last_name':'Surname3'}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertTrue(form.is_valid())
         self.assertEqual(len(form.errors), 0)
         user = form.save()
         self.assertEqual(user.username, 'user3')
-        self.assertEqual(user.email, 'user3@mail.com')
+        self.assertEqual(user.email, 'user1@mail.com')
         self.assertEqual(user.first_name, 'Name3')
         self.assertEqual(user.last_name, 'Surname3')
 
     def test_empty_fields(self):
         form = forms.UpdateUserForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['This field is required.'])
         self.assertEqual(form.errors['username'], ['This field is required.'])
         self.assertEqual(form.errors['current_password'], ['This field is required.'])
-        self.assertEqual(len(form.errors), 3)
+        self.assertEqual(len(form.errors), 2)
 
-        data = {'username':'', 'email':'', 'current_password':''}
+        data = {'username':'', 'current_password':''}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['This field is required.'])
+
         self.assertEqual(form.errors['username'], ['This field is required.'])
         self.assertEqual(form.errors['current_password'], ['This field is required.'])
-        self.assertEqual(len(form.errors), 3)
+        self.assertEqual(len(form.errors), 2)
     
     def test_max_length_fields(self):
-        data = {'username':RANDOM_STRING_151_LENGTH, 'email': RANDOM_EMAIL_255_LENGTH,
+        data = {'username':RANDOM_STRING_151_LENGTH,
             'current_password': 'jajajeje11', 'first_name':RANDOM_STRING_151_LENGTH,
             'last_name': RANDOM_STRING_151_LENGTH}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['Ensure this value has at most 254 characters (it has 255).'])
         self.assertEqual(form.errors['username'], ['Ensure this value has at most 150 characters (it has 151).'])
         self.assertEqual(form.errors['first_name'], ['Ensure this value has at most 150 characters (it has 151).'])
         self.assertEqual(form.errors['last_name'], ['Ensure this value has at most 150 characters (it has 151).'])
-        self.assertEqual(len(form.errors), 4)
+        self.assertEqual(len(form.errors), 3)
 
     def test_wrong_password(self):
-        data = {'username':'user1', 'email':'user1@mail.com', 'current_password':'IncorrectPassword'}
+        data = {'username':'user1', 'current_password':'IncorrectPassword'}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['current_password'], [forms.ERROR_MESSAGE_INCORRECT_PASSWORD])
@@ -149,33 +147,14 @@ class UpdateUserFormTestCase(TestCase):
         user2.email = 'user2@mail.com'
         user2.set_password('jajajeje22')
         user2.save()
-        data = {'username':'user2', 'email':'user1@mail.com', 'current_password':'jajajeje11'}
+        data = {'username':'user2', 'current_password':'jajajeje11'}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['username'], ['A user with that username already exists.'])
         self.assertEqual(len(form.errors), 1)
 
-    def test_incorrect_email(self):
-        data = {'username':'user1', 'email':'user1@mail.', 'current_password':'jajajeje11'}
-        form = forms.UpdateUserForm(data=data, instance=self.user)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
-        self.assertEqual(len(form.errors), 1)
-
-        data = {'username':'user1', 'email':'user1@.com', 'current_password':'jajajeje11'}
-        form = forms.UpdateUserForm(data=data, instance=self.user)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
-        self.assertEqual(len(form.errors), 1)
-
-        data = {'username':'user1', 'email':'usér1@mail.com', 'current_password':'jajajeje11'}
-        form = forms.UpdateUserForm(data=data, instance=self.user)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
-        self.assertEqual(len(form.errors), 1)
-
     def test_incorrect_username(self):
-        data = {'username':'user3%', 'email':'user1@mail.com', 'current_password':'jajajeje11'}
+        data = {'username':'user3%', 'current_password':'jajajeje11'}
         form = forms.UpdateUserForm(data=data, instance=self.user)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['username'], ['Enter a valid username. This value may contain only letters, numbers, and @/./+/-/_ characters.'])
@@ -300,4 +279,85 @@ class NewAuthenticationFormTestCase(TestCase):
         form = forms.NewAuthenticationForm(data=data)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['password'], [forms.ERROR_MESSAGE_INCORRECT_LOGIN_DATA])
+        self.assertEqual(len(form.errors), 1)
+
+
+class UpdateEmailFormTestCase(TestCase):
+
+    def setUp(self):
+        user = User()
+        user.username = 'user1'
+        user.email = 'user1@mail.com'
+        user.set_password('jajajeje11')
+        user.firs_name = 'Name1'
+        user.last_name = 'Surname1'
+        user.save()
+        self.user = user
+
+    def test_success_case(self):
+        data = {'email':'user3@mail.com', 'current_password':'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertTrue(form.is_valid())
+        self.assertEqual(len(form.errors), 0)
+        user = form.save()
+        self.assertEqual(user.username, 'user1')
+        self.assertEqual(user.email, 'user3@mail.com')
+
+    def test_empty_fields(self):
+        form = forms.UpdateEmailForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['This field is required.'])
+        self.assertEqual(form.errors['current_password'], ['This field is required.'])
+        self.assertEqual(len(form.errors), 2)
+
+        data = {'email':'', 'current_password':''}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['This field is required.'])
+        self.assertEqual(form.errors['current_password'], ['This field is required.'])
+        self.assertEqual(len(form.errors), 2)
+    
+    def test_max_length_fields(self):
+        data = {'email': RANDOM_EMAIL_255_LENGTH, 'current_password': 'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['Ensure this value has at most 254 characters (it has 255).'])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_wrong_password(self):
+        data = {'email':'user1@mail.com', 'current_password':'IncorrectPassword'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['current_password'], [forms.ERROR_MESSAGE_INCORRECT_PASSWORD])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_email_already_in_use(self):
+        user2 = User()
+        user2.username = 'user2'
+        user2.email = 'user2@mail.com'
+        user2.set_password('jajajeje22')
+        user2.save()
+        data = {'email':'user2@mail.com', 'current_password':'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['A user with that email already exists.'])
+        self.assertEqual(len(form.errors), 1)
+
+    def test_incorrect_email(self):
+        data = {'email':'user1@mail.', 'current_password':'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
+        self.assertEqual(len(form.errors), 1)
+
+        data = {'email':'user1@.com', 'current_password':'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
+        self.assertEqual(len(form.errors), 1)
+
+        data = {'email':'usér1@mail.com', 'current_password':'jajajeje11'}
+        form = forms.UpdateEmailForm(data=data, instance=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
         self.assertEqual(len(form.errors), 1)

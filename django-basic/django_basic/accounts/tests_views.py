@@ -70,6 +70,10 @@ class NonAllowedRequestsTestCase(TestCase):
         self.assertRedirects(response, reverse('accounts:login') + '?' + urlencode({'next': '/accounts/update/' }))
         response = self.client.post(reverse('accounts:delete'))
         self.assertRedirects(response, reverse('accounts:login') + '?' + urlencode({'next': '/accounts/delete/' }))
+        response = self.client.post(reverse('accounts:update_profile'))
+        self.assertRedirects(response, reverse('accounts:login') + '?' + urlencode({'next': '/accounts/profile/update/' }))
+        response = self.client.post(reverse('accounts:update_email'))
+        self.assertRedirects(response, reverse('accounts:login') + '?' + urlencode({'next': '/accounts/update_email/' }))
 
 
 class ViewProfileTestCase(TestCase):
@@ -90,7 +94,7 @@ class ViewProfileTestCase(TestCase):
         self.assertEqual
 
 
-class UpdateProfileTestCase(TestCase):
+class UpdateUserNamesTestCase(TestCase):
     
     def setUp(self):
         user = User()
@@ -104,26 +108,62 @@ class UpdateProfileTestCase(TestCase):
     def test_load(self):
         response = self.client.get(reverse('accounts:update'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(response, views.UPDATE_PROFILE_TEMPLATE_FILE)
+        self.assertTemplateUsed(response, views.UPDATE_USER_NAMES_TEMPLATE_FILE)
         self.assertEqual(self.user.username, response.context['user'].username)
 
     def test_invalid_data(self):
-        data={'email':'', 'current_password':'incorrectpassword'}
+        data={'username':'', 'current_password':'incorrectpassword'}
         response = self.client.post(reverse('accounts:update'), data=data)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(response, views.UPDATE_PROFILE_TEMPLATE_FILE)
+        self.assertTemplateUsed(response, views.UPDATE_USER_NAMES_TEMPLATE_FILE)
         self.assertEqual(self.user.username, response.context['user'].username)
         self.assertEqual(type(response.context['form']), forms.UpdateUserForm)
-        self.assertEqual(len(response.context['form'].errors), 3)
+        self.assertEqual(len(response.context['form'].errors), 2)
     
     def test_valid_data(self):
-        data={'username':'user3', 'email':'user3@mail.com', 'first_name':'name3', 'current_password':'jajajeje11'}
+        data={'username':'user3', 'first_name':'name3', 'current_password':'jajajeje11'}
         response = self.client.post(reverse('accounts:update'), data=data)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertRedirects(response, reverse('accounts:profile'))
         self.assertEqual(User.objects.filter(username='user3').count(), 1)
         self.assertEqual(User.objects.filter(username='user1').count(), 0)
-        self.assertEqual(User.objects.get(username='user3').email, 'user3@mail.com')
+        self.assertEqual(User.objects.get(username='user3').first_name, 'name3')
+
+
+class UpdateEmailTestCase(TestCase):
+    
+    def setUp(self):
+        user = User()
+        user.username = 'user1'
+        user.email = 'user1@mail.com'
+        user.set_password('jajajeje11')
+        user.save()
+        self.user = user
+        self.client.login(username='user1', password='jajajeje11')
+
+    def test_load(self):
+        response = self.client.get(reverse('accounts:update_email'))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response, views.UPDATE_USER_EMAIL_TEMPLATE_FILE)
+        self.assertEqual(self.user.email, response.context['user'].email)
+
+    def test_invalid_data(self):
+        data={'email':'', 'current_password':'incorrectpassword'}
+        response = self.client.post(reverse('accounts:update_email'), data=data)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response, views.UPDATE_USER_EMAIL_TEMPLATE_FILE)
+        self.assertEqual(self.user.email, response.context['user'].email)
+        self.assertEqual(type(response.context['form']), forms.UpdateEmailForm)
+        self.assertEqual(len(response.context['form'].errors), 2)
+    
+    def test_valid_data(self):
+        data={'email':'user3@mail.com', 'current_password':'jajajeje11'}
+        response = self.client.post(reverse('accounts:update_email'), data=data)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertRedirects(response, reverse('accounts:profile'))
+        self.assertEqual(User.objects.filter(email='user3@mail.com').count(), 1)
+        self.assertEqual(User.objects.filter(email='user1@mail.com').count(), 0)
+        self.assertEqual(User.objects.get(username='user1').email, 'user3@mail.com')
 
 
 class DeleteProfileTestCase(TestCase):
