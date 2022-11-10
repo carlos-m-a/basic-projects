@@ -239,6 +239,16 @@ class NewAuthenticationFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(len(form.errors), 0)
 
+        user = User()
+        user.username = 'user2'
+        user.email = RANDOM_STRING_151_LENGTH+'@mail.com'
+        user.set_password('jajajeje11')
+        user.save()
+        data = {'username':RANDOM_STRING_151_LENGTH+'@mail.com', 'password':'jajajeje11'}
+        form = forms.NewAuthenticationForm(data=data)
+        self.assertTrue(form.is_valid())
+        self.assertEqual(len(form.errors), 0)
+
     def test_empty_fields(self):
         form = forms.NewAuthenticationForm(data={})
         self.assertFalse(form.is_valid())
