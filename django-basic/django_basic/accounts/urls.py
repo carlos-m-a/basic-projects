@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import RegisterView, NewLoginView, NewLogoutView, NewPasswordResetView, NewPasswordResetConfirmView, NewPasswordResetDoneView, NewPasswordResetCompleteView, NewPasswordChangeView, NewPasswordChangeDoneView
-from .views import ProfileView
+from .views import ProfileView, UpdateProfileView, UpdateEmailView, UpdateProfileImageView
 
 app_name = 'accounts'
 
@@ -20,4 +20,7 @@ urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),
     path("update/", views.update, name="update"),
     path("delete/", views.delete, name="delete"),
+    path("profile/update/", UpdateProfileView.as_view(), name="update_profile"),
+    path("profile/update_image/", UpdateProfileImageView.as_view(), name="update_profile_image"),
+    path("update_email/", UpdateEmailView.as_view(), name="update_email"),
 ]

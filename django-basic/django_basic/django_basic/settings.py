@@ -26,7 +26,7 @@ environ.Env.read_env()
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
@@ -155,6 +155,10 @@ USE_TZ = env('USE_TZ')
 
 STATIC_URL = env('STATIC_URL')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'base/static'),]
+
+# Media files (Images, etc) Files uploaded by users
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = env('MEDIA_URL')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

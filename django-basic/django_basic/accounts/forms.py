@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+from .models import Profile
 ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
 ERROR_MESSAGE_INCORRECT_LOGIN_DATA = _('Incorrect password or username-email')
 TEXT_PASSWORD_IS_REQUIRED = _('Current password is required to allow this action')
@@ -122,14 +122,13 @@ class NewSetPasswordForm(SetPasswordForm):
 
 class UpdateUserForm(forms.ModelForm):
     username = get_username_field()
-    email = get_email_field()
     first_name = get_name_field('first name')
     last_name = get_name_field('last name')
     current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'current_password']
+        fields = ['username', 'first_name', 'last_name', 'current_password']
 
     def clean_current_password(self):
         current_password = self.cleaned_data['current_password']
@@ -149,3 +148,44 @@ class DeleteUserForm(forms.ModelForm):
         if not self.instance.check_password(current_password):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
+
+class UpdateEmailForm(forms.ModelForm):
+    email = get_email_field()
+    current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
+    class Meta:
+        model = User
+        fields = ['email','current_password']
+    def clean_current_password(self):
+        current_password = self.cleaned_data['current_password']
+        if not self.instance.check_password(current_password):
+            raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
+        return current_password
+
+class UpdateProfileForm(forms.ModelForm):
+    bio_text = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.Textarea(attrs={"class":"form-control", 'rows':"3", 'placeholder':_('Enter short biography')}),
+        strip=False,
+        label=_('Biography'),
+    )
+    date_of_birth = forms.DateField(
+        required=False,
+        label=_("Date of birth"), 
+        widget= forms.DateInput(attrs={'type': 'date', 'class':'form-control', 'required': False, })
+    )
+    class Meta:
+        model = Profile
+        fields = ['bio_text', 'date_of_birth']
+
+class UpdateProfileImageForm(forms.ModelForm):
+    avatar_image = forms.FileField(
+        required=False,
+        max_length=254,
+        label=_("Logo image"), 
+        widget= forms.FileInput(attrs={'class':'form-control', 'required': False, })
+    )
+    
+    class Meta:
+        model = Profile
+        fields = ['avatar_image']

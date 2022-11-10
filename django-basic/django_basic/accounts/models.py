@@ -11,6 +11,12 @@ class User(AbstractUser):
             "unique": _("A user with that email already exists."),
         },
     )
-    
 
-    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar_image = models.ImageField(upload_to='images/', null=True, blank=True, max_length=254)
+    bio_text = models.TextField(blank=True, max_length=254)
+    date_of_birth = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username

@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
 from django.shortcuts import redirect, render
 from django.contrib.auth import logout, get_user_model
 from django.urls import reverse_lazy
@@ -7,15 +6,20 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from .forms import NewUserForm, UpdateUserForm, DeleteUserForm, NewAuthenticationForm, NewPasswordChangeForm, NewPasswordResetForm, NewSetPasswordForm
+from .forms import UpdateProfileForm, UpdateEmailForm, UpdateProfileImageForm
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView
+from .models import Profile
 
 User = get_user_model()
 
 
 VIEW_PROFILE_TEMPLATE_FILE = 'accounts/profile.html'
-UPDATE_PROFILE_TEMPLATE_FILE = 'accounts/update.html'
+UPDATE_USER_NAMES_TEMPLATE_FILE = 'accounts/update_names.html'
+UPDATE_PROFILE_TEMPLATE_FILE = 'accounts/update_profile.html'
+UPDATE_PROFILE_IMAGE_TEMPLATE_FILE = 'accounts/update_profile_image.html'
+UPDATE_USER_EMAIL_TEMPLATE_FILE = 'accounts/update_email.html'
 DELETE_PROFILE_TEMPLATE_FILE = 'accounts/delete.html'
 REGISTER_USER_TEMPLATE_FILE = 'accounts/register.html'
 REGISTER_USER_DONE_TEMPLATE_FILE = 'accounts/register_done.html'
@@ -35,7 +39,8 @@ class RegisterView(CreateView):
     form_class = NewUserForm
     template_name = REGISTER_USER_TEMPLATE_FILE
     def form_valid(self, form):
-        form.save()
+        user = form.save()
+        Profile.objects.create(user=user)
         context = {}
         context['new_user_name'] = form.cleaned_data['username']
         context['new_user_email'] = form.cleaned_data['email']
@@ -110,6 +115,7 @@ class NewPasswordResetCompleteView(PasswordResetCompleteView):
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = VIEW_PROFILE_TEMPLATE_FILE
 
+#Update user
 @login_required
 def update(request):
     if request.method == 'POST':
@@ -117,16 +123,17 @@ def update(request):
         form = UpdateUserForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request, _('Profile has been updated'))
+            messages.success(request, _('Username/first name/last name have been updated'))
             return redirect('accounts:profile')
         else:
             context = {'form': form,}
-            return render(request, UPDATE_PROFILE_TEMPLATE_FILE, context)
+            return render(request, UPDATE_USER_NAMES_TEMPLATE_FILE, context)
     else:
         form = UpdateUserForm(instance=request.user)
         context = {'form': form,}
-        return render(request, UPDATE_PROFILE_TEMPLATE_FILE, context)
+        return render(request, UPDATE_USER_NAMES_TEMPLATE_FILE, context)
 
+#Delete user
 @login_required
 def delete(request):
     if request.method == 'POST':
@@ -145,4 +152,36 @@ def delete(request):
         form = DeleteUserForm()
         context = {'form': form,}
         return render(request, DELETE_PROFILE_TEMPLATE_FILE, context)
-            
+
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
+    form_class = UpdateProfileForm
+    template_name = UPDATE_PROFILE_TEMPLATE_FILE
+    model = Profile
+    success_url = reverse_lazy('accounts:profile')
+    def get_object(self):
+        return self.request.user.profile
+    def form_valid(self, form):
+        messages.success(self.request, _('Profile has been updated'))
+        return super().form_valid(form)
+
+class UpdateProfileImageView(LoginRequiredMixin, UpdateView):
+    form_class = UpdateProfileImageForm
+    template_name = UPDATE_PROFILE_IMAGE_TEMPLATE_FILE
+    model = Profile
+    success_url = reverse_lazy('accounts:profile')
+    def get_object(self):
+        return self.request.user.profile
+    def form_valid(self, form):
+        messages.success(self.request, _('Profile image has been updated'))
+        return super().form_valid(form)
+
+class UpdateEmailView(LoginRequiredMixin, UpdateView):
+    form_class = UpdateEmailForm
+    template_name = UPDATE_USER_EMAIL_TEMPLATE_FILE
+    model = User
+    success_url = reverse_lazy('accounts:profile')
+    def get_object(self):
+        return self.request.user
+    def form_valid(self, form):
+        messages.success(self.request, _('Email has been updated'))
+        return super().form_valid(form)

@@ -20,9 +20,24 @@
             <dt>Last name</dt>
             <dd>{{user.last_name}}</dd>
         {% endif %}
+        {% if user.profile.date_of_birth %}
+            <dt>Date of birth</dt>
+            <dd>{{user.profile.date_of_birth}}</dd>
+        {% endif %}
+        {% if user.profile.bio_text %}
+            <dt>Biography</dt>
+            <dd>{{user.profile.bio_text}}</dd>
+        {% endif %}
+        {% if user.profile.avatar_image %}
+            <dt>Avatar image</dt>
+            <dd><img src="{{user.profile.avatar_image.url}}" width="200" height="200"></dd>
+        {% endif %}
         </dl>     
         <div mt-1>
             <a href="{% url 'accounts:update' %}" class="btn btn-primary">Update</a>
+            <a href="{% url 'accounts:update_email' %}" class="btn btn-primary">Update email</a>
+            <a href="{% url 'accounts:update_profile' %}" class="btn btn-primary">Update profile</a>
+            <a href="{% url 'accounts:update_profile_image' %}" class="btn btn-primary">Update profile image</a>
             <a href="{% url 'accounts:password_change' %}" class="btn btn-primary">Change password</a>
             <a href="{% url 'accounts:delete' %}" class="btn btn-danger">Delete</a>
         </div>
