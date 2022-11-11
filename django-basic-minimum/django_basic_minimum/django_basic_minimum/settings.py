@@ -26,7 +26,7 @@ environ.Env.read_env()
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
@@ -93,18 +93,18 @@ DATABASES = {
         'USER': env("DATABASE_USER"),
         'PASSWORD': env("DATABASE_PASSWORD"),
         'HOST': env("DATABASE_HOST"),
-        'PORT': env("DATABASE_PORT"),
+        'PORT': env.int("DATABASE_PORT"),
     }
 }
 
 # FOR EMAILS (reset passwords, etc)
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_TIMEOUT = env('EMAIL_TIMEOUT')
+EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 # Password validation
@@ -134,9 +134,9 @@ LANGUAGE_CODE = env('LANGUAGE_CODE')
 
 TIME_ZONE = env('TIME_ZONE')
 
-USE_I18N = env('USE_I18N')
+USE_I18N = env.bool('USE_I18N')
 
-USE_TZ = env('USE_TZ')
+USE_TZ = env.bool('USE_TZ')
 
 
 # Static files (CSS, JavaScript, Images)
