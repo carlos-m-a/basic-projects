@@ -42,5 +42,8 @@ USE_TZ=True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL=static/
 
+# Non-static files (images, pdfs, etc.. that users modify)
+MEDIA_URL=/media/
+
 # Name of your web (not the url, without www or .com)
 SITE_DOMAIN_NAME=

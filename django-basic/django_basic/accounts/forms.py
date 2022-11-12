@@ -87,7 +87,7 @@ class NewAuthenticationForm(AuthenticationForm):
 
         if username is not None and password:
             self.user_cache = authenticate(
-                self.request, username=username, password=password
+                request=self.request, username=username, password=password
             )
             if self.user_cache is None:
                 raise ValidationError(ERROR_MESSAGE_INCORRECT_LOGIN_DATA, code='invalid_login')

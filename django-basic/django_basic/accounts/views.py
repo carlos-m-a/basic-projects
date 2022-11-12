@@ -58,6 +58,11 @@ class NewLoginView(LoginView):
             return redirect(settings.LOGIN_REDIRECT_URL)
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.request = self.request
+        return form
+
 class NewLogoutView(LogoutView):
     template_name = LOGOUT_TEMPLATE_FILE
     def get(self, request, *args, **kwargs):
