@@ -10,9 +10,9 @@
 	<h1 class="font-weight-bold mt-3">Delete account</h2>
 	<hr>
 
-	<p> This action is to permanently delete your user account (<b>{{user.username}}</b>).</p>
+	<p> This action is to permanently delete your user account (<b>{{user.get_username}}</b>).</p>
 	<p> If you continue with this action your user will be delete and you won't be able to login again with this account.</p>
-	<p> To remove the user <b>{{user.username}}</b>, you must provide your password.</p>
+	<p> To remove the user <b>{{user.get_username}}</b>, you must provide your password.</p>
 	
 	<form  action="{% url 'accounts:delete' %}" method="post" class="post-form">
 		{% csrf_token %}

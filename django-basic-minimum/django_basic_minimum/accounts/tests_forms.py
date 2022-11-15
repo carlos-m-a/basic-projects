@@ -17,7 +17,7 @@ class RegistrationFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(len(form.errors), 0)
         user = form.save()
-        self.assertEqual(user.username, 'user3')
+        self.assertEqual(user.get_username(), 'user3')
         self.assertEqual(user.email, 'user3@mail.com')
         self.assertTrue(check_password('jajajeje11', user.password))
 
@@ -103,7 +103,7 @@ class UpdateUserFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(len(form.errors), 0)
         user = form.save()
-        self.assertEqual(user.username, 'user3')
+        self.assertEqual(user.get_username(), 'user3')
         self.assertEqual(user.email, 'user3@mail.com')
         self.assertEqual(user.first_name, 'Name3')
         self.assertEqual(user.last_name, 'Surname3')
