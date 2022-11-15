@@ -147,7 +147,7 @@ def delete(request):
         if form.is_valid():
             user.is_active = False
             user.save()
-            messages.success(request, _('User') + ' \"' + request.user.username + '\"' + _(" has been deleted"))
+            messages.success(request, _('User') + ' \"' + request.user.get_username() + '\"' + _(" has been deleted"))
             logout(request)
             return redirect(settings.LOGIN_URL)
         else:

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from .models import Profile
+
 ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
 ERROR_MESSAGE_INCORRECT_LOGIN_DATA = _('Incorrect password or username-email')
 TEXT_PASSWORD_IS_REQUIRED = _('Current password is required to allow this action')
@@ -179,7 +180,7 @@ class UpdateProfileForm(forms.ModelForm):
         fields = ['bio_text', 'date_of_birth']
 
 class UpdateProfileImageForm(forms.ModelForm):
-    avatar_image = forms.FileField(
+    avatar_image = forms.ImageField(
         required=False,
         max_length=254,
         label=_("Logo image"), 

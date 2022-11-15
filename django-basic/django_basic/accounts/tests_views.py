@@ -91,7 +91,7 @@ class ViewProfileTestCase(TestCase):
         response = self.client.get(reverse('accounts:profile'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, views.VIEW_PROFILE_TEMPLATE_FILE)
-        self.assertEqual
+        self.assertEqual(self.user.get_username(), response.context['user'].get_username())
 
 
 class UpdateUserNamesTestCase(TestCase):
@@ -109,14 +109,14 @@ class UpdateUserNamesTestCase(TestCase):
         response = self.client.get(reverse('accounts:update'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, views.UPDATE_USER_NAMES_TEMPLATE_FILE)
-        self.assertEqual(self.user.username, response.context['user'].username)
+        self.assertEqual(self.user.get_username(), response.context['user'].get_username())
 
     def test_invalid_data(self):
         data={'username':'', 'current_password':'incorrectpassword'}
         response = self.client.post(reverse('accounts:update'), data=data)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, views.UPDATE_USER_NAMES_TEMPLATE_FILE)
-        self.assertEqual(self.user.username, response.context['user'].username)
+        self.assertEqual(self.user.get_username(), response.context['user'].get_username())
         self.assertEqual(type(response.context['form']), forms.UpdateUserForm)
         self.assertEqual(len(response.context['form'].errors), 2)
     
@@ -181,14 +181,14 @@ class DeleteProfileTestCase(TestCase):
         response = self.client.get(reverse('accounts:delete'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, views.DELETE_PROFILE_TEMPLATE_FILE)
-        self.assertEqual(self.user.username, response.context['user'].username)
+        self.assertEqual(self.user.get_username(), response.context['user'].get_username())
 
     def test_invalid_data(self):
         data={'current_password':'incorrectpassword'}
         response = self.client.post(reverse('accounts:delete'), data=data)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, views.DELETE_PROFILE_TEMPLATE_FILE)
-        self.assertEqual(self.user.username, response.context['user'].username)
+        self.assertEqual(self.user.get_username(), response.context['user'].get_username())
         self.assertEqual(type(response.context['form']), forms.DeleteUserForm)
         self.assertEqual(len(response.context['form'].errors), 1)
 

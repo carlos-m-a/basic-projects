@@ -9,9 +9,9 @@
     <div class="container mt-3 mb-3">
         <h1>Delete account</h1>
 
-        <p class="h6"><small> This action is to permanently delete your user account (<b>{{user.username}}</b>).</small></p>
+        <p class="h6"><small> This action is to permanently delete your user account (<b>{{user.get_username}}</b>).</small></p>
         <p class="h6"><small> If you continue with this action your user will be delete and you won't be able to login again with this account.</small></p>
-        <p class="h6"><small> To remove the user <b>{{user.username}}</b>, you must provide your password.</small></p>
+        <p class="h6"><small> To remove the user <b>{{user.get_username}}</b>, you must provide your password.</small></p>
 
         <form  action="{% url 'accounts:delete' %}" method="post" class="post-form">
 			<div class="mb-2">
