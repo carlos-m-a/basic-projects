@@ -1,0 +1,22 @@
+{% extends BASE_TEMPLATE_DIR %}
+
+{% block title %}Create mymodel{% endblock %} 
+
+{% block content %} 
+
+
+{% load crispy_forms_tags %}         
+
+    <div class="container mt-3 mb-3">
+        <h1>Update profile</h1>
+        <form   method="post" class="post-form">
+            <div class="mb-2">
+                {% csrf_token %}
+                {{ form|crispy }}
+            </div>
+            <button class="btn btn-primary" type="submit">Create</button>
+            <a href="{% url 'app1:my_model_list' %}" class="btn btn-dark">Cancel</a>
+        </form>
+    </div>
+
+{% endblock %}

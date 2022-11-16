@@ -1,6 +1,6 @@
 {% extends BASE_TEMPLATE_DIR %}
 
-{% block title %}Delete account{% endblock %} 
+{% block title %}Home app1{% endblock %} 
 
 {% block content %} 
 
@@ -12,5 +12,7 @@
 
 	<p>  <b>App1</b> home.</p>
 	<p> Conten text.</p>
+	<a href="{% url 'app1:my_model_list' %}" class="btn btn-primary">list</a>
+	<a href="{% url 'app1:my_model_create' %}" class="btn btn-primary">create</a>
 
 {% endblock %}

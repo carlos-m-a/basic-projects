@@ -1,0 +1,16 @@
+{% extends BASE_TEMPLATE_DIR %}
+
+{% block title %}Detail app1 mymodel{% endblock %} 
+
+{% block content %} 
+
+    {% load crispy_forms_tags %}         
+
+    <div class="container mt-3 mb-3">
+        <h1>View my model</h1>
+        {{mymodel}}
+        <p>
+        <a href="{% url 'app1:my_model_list' %}" class="btn btn-primary">list</a>
+    </div>
+
+{% endblock %}

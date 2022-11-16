@@ -1,0 +1,22 @@
+
+
+{% extends BASE_TEMPLATE_DIR %}
+
+{% block title %}Create mymodel{% endblock %} 
+
+{% block content %} 
+
+
+{% load crispy_forms_tags %}         
+
+    <div class="container mt-3 mb-3">
+        <h1>Delete mymodel</h1>
+        {{mymodel}}
+        <form action="{% url 'app1:my_model_delete' mymodel.id %}"  method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Delete</button>
+        </form>
+        
+    </div>
+
+{% endblock %}
