@@ -36,7 +36,7 @@ class MyModel(models.Model):
     # RELATIONSHIPS
     
     # Many-to-One:
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     # Many-to-Many: 
     other_models_2 = models.ManyToManyField(OtherModel2, blank=True)
@@ -49,4 +49,7 @@ class MyModel(models.Model):
         string = self.name
         string += ', int:'
         string += str(self.small_int)
+        string += ', owner:'
+        string += str(self.owner.username)
         return string
+        
