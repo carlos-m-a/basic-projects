@@ -1,6 +1,5 @@
-import sys
 from python_basic.package_1 import module_A
-from . import settings
+from python_basic.main import settings
 
 def main(args):
     module_A.some_function()

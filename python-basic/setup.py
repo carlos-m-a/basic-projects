@@ -2,7 +2,7 @@ import setuptools
 
 with open('requirements.txt', 'r') as f:
     install_requires = f.read().splitlines()
-                 
+
 
 setuptools.setup(
    name='python_basic',
@@ -12,6 +12,6 @@ setuptools.setup(
    author='Author Name',
    author_email='author@email.com',
    license='BSD 2-clause',
-   packages=['src'],
+   packages=['python_basic'],
    install_requires=install_requires
 )
