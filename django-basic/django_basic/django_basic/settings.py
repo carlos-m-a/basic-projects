@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'debug_toolbar',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -58,8 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_basic.urls'
@@ -154,7 +151,8 @@ USE_TZ = env.bool("USE_TZ")
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = env('STATIC_URL')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'base/static'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATIC_ROOT = env('STATIC_ROOT')
 
 # Media files (Images, etc) Files uploaded by users
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
