@@ -27,3 +27,4 @@ The  apps of this projects are:
 * Install every package in requeriments.txt (pip install -r requeriments.txt)
 * python manage.py makemigrations
 * python manage.py migrate
+* (for production) python manage.py collectstatic
