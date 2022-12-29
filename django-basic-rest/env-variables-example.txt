@@ -6,7 +6,9 @@ SECRET_KEY=
 
 #postgre: django.db.backends.postgresql
 #mariadb-mysql: django.db.backends.mysql
+#sqlite (only for dev, you don't need to install anything): django.db.backends.sqlite3
 DATABASE_ENGINE=
+#sqlite: BASE_DIR / 'db.sqlite3'
 DATABASE_NAME=django_basic
 DATABASE_USER=
 DATABASE_PASSWORD=
