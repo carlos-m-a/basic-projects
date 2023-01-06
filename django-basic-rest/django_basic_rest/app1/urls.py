@@ -23,4 +23,8 @@ urlpatterns = [
 
     path('', include(router.urls)),
 
+    path('checking-auth-class/', views.ClassBasedView.as_view()),
+
+    path('checking-auth-function/', views.function_based_view)
+
 ]

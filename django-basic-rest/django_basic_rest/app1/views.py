@@ -2,13 +2,14 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, mixins, viewsets
-from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication, RemoteUserAuthentication, BaseAuthentication
 from .models import Todo, Note
 from .serializers import TodoSerializer, NoteSerializer
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.http import Http404
 
 
@@ -193,3 +194,38 @@ class NoteViewSet(viewsets.ModelViewSet):
     """
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+
+class ClassBasedView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+  
+    def get(self, request, format=None):
+        content = {
+            
+            # `django.contrib.auth.User` instance
+            'user': str(request.user),
+            
+            # None
+            'auth': str(request.auth),
+            'authenticators': str(request.authenticators),
+            'data': str(request.data),
+            'COOKIES': str(request.COOKIES),
+            'headers': str(request.headers),
+            'session': str(request.session),
+        }
+        return Response(content)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def function_based_view(request, format=None):
+    content = {
+        
+        # `django.contrib.auth.User` instance
+        'user': str(request.user),
+        
+        # None
+        'auth': str(request.auth),
+    }
+    return Response(content)
