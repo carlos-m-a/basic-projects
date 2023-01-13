@@ -30,6 +30,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 INSTALLED_APPS = [
     'app1',
+    'accounts',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 #     'accounts.authentication.EmailAuthBackend'
 # ]
 
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
 # LOGIN_URL='/accounts/login/'
 # LOGIN_REDIRECT_URL='/home'
 # LOGOUT_REDIRECT_URL='/accounts/login/'
