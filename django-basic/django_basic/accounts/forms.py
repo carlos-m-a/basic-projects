@@ -9,69 +9,97 @@ ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
 ERROR_MESSAGE_INCORRECT_LOGIN_DATA = _('Incorrect password or username-email')
 TEXT_PASSWORD_IS_REQUIRED = _('Current password is required to allow this action')
 
+INPUT_FIELD_HTML_CLASS = "form-control"
+
 User = get_user_model()
 
 
-def get_password_field(is_confirmation:bool=False, is_new:bool=False, help_text_active:bool=False):
-    password_string = 'Password'
-    if is_new:
-        password_string = 'New ' + password_string.lower()
-    placeholder_string = 'Enter ' + password_string.lower()
-    placeholder_string = _(placeholder_string)
-    if is_confirmation:
-        password_string += ' confirmation'
-    password_string = _(password_string)
 
-    if is_confirmation and (is_new or not help_text_active):
-        placeholder_string += ' again'
+#####################################
+### Field definition forms ##########
+#####################################
 
-    password_field =  forms.CharField(
-        label=password_string,
+
+class NewPasswordFieldsForm(forms.Form):
+    new_password1 = forms.CharField(
+        label=_('New password'),
         required=True,
         strip=False,
         max_length=150,
-        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':'form-control','placeholder':placeholder_string}),
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_('Enter new password'),}),
     )
-    if help_text_active:
-        password_field.help_text = TEXT_PASSWORD_IS_REQUIRED
-    return password_field
+    new_password2 = forms.CharField(
+        label=_('New password confirmation'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_('Enter new password again'),}),
+    )
 
-def get_username_field():
-    return UsernameField(
+class CurrentPasswordFieldForm(forms.Form):
+    current_password =  forms.CharField(
+        label=_('Password confirmation'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_("Enter password")}),
+        help_text = TEXT_PASSWORD_IS_REQUIRED
+    )
+
+class UsernameFieldForm(forms.Form):
+    username = UsernameField(
             required=True,
             max_length=150,
-            widget=forms.TextInput(attrs={"autofocus": True, "class":"form-control", 'placeholder':_('Enter username')}),
+            widget=forms.TextInput(attrs={"autofocus": True, "class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter username')}),
             strip=False,
             label=_("Username"),
         )
 
-def get_email_field():
-    return forms.EmailField(
+class EmailFieldForm(forms.Form):
+    email = forms.EmailField(
             required=True,
             max_length=254,
             label=_("Email"), 
-            widget=forms.EmailInput(attrs={"autocomplete": "email", "class":"form-control", 'placeholder':_('Enter email')}),
+            widget=forms.EmailInput(attrs={"autocomplete": "email", "class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter email')}),
         )
 
-def get_name_field(name:str):
-    return forms.CharField(
+class NamesFieldsForm(forms.Form):
+    first_name = forms.CharField(
         max_length=150,
         required=False,
-        widget=forms.TextInput(attrs={"class":"form-control", 'placeholder':_('Enter ' + name.lower())}),
+        widget=forms.TextInput(attrs={"class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter first name')}),
         strip=False,
-        label=_(name.capitalize()),
+        label=_('First name'),
+    )
+    last_name = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={"class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter last name')}),
+        strip=False,
+        label=_('Last name'),
     )
 
 
+
+#####################################
+###########  New forms  #############
+#####################################
+
 class NewAuthenticationForm(AuthenticationForm):
     username = UsernameField(
-        widget=forms.TextInput(attrs={"autofocus": True, "class":"form-control", 'placeholder':_('Enter username or email')}),
+        widget=forms.TextInput(attrs={"autofocus": True, "class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter username or email')}),
         required=True,
         strip=False,
         max_length=254,
         label=_("Username or email"),
     )
-    password = get_password_field(is_confirmation=False, is_new=False)
+    password = forms.CharField(
+        label=_('Password'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_('Enter password'),}),
+    )
 
     def __init__(self, request=None, *args, **kwargs):
         """
@@ -100,33 +128,42 @@ class NewAuthenticationForm(AuthenticationForm):
     def clean(self):
         return self.cleaned_data
 
-class NewUserForm(UserCreationForm):
-    username = get_username_field()
-    email = get_email_field()
-    password1 = get_password_field(is_confirmation=False, is_new=False)
-    password2 = get_password_field(is_confirmation=True, is_new=False)
+class NewUserForm(UsernameFieldForm, EmailFieldForm, UserCreationForm):
+    password1 = forms.CharField(
+        label=_('Password'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_('Enter password'),}),
+    )
+    password2 = forms.CharField(
+        label=_('Password confirmation'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_('Enter password again'),}),
+    )
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
 
-class NewPasswordChangeForm(PasswordChangeForm):
-    old_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
-    new_password1 = get_password_field(is_confirmation=False, is_new=True)
-    new_password2 = get_password_field(is_confirmation=True, is_new=True)
+class NewPasswordChangeForm(NewPasswordFieldsForm, PasswordChangeForm):
+    old_password =  forms.CharField(
+        label=_('Password confirmation'),
+        required=True,
+        strip=False,
+        max_length=150,
+        widget=forms.PasswordInput(attrs={"autocomplete": "on password", 'class':INPUT_FIELD_HTML_CLASS,'placeholder':_("Enter password")}),
+        help_text = TEXT_PASSWORD_IS_REQUIRED
+    )
 
-class NewPasswordResetForm(PasswordResetForm):
-    email = get_email_field()
+class NewPasswordResetForm(EmailFieldForm, PasswordResetForm):
+    pass
 
-class NewSetPasswordForm(SetPasswordForm):
-    new_password1 = get_password_field(is_confirmation=False, is_new=True)
-    new_password2 = get_password_field(is_confirmation=True, is_new=True)
+class NewSetPasswordForm(NewPasswordFieldsForm, SetPasswordForm):
+    pass
 
-class UpdateUserForm(forms.ModelForm):
-    username = get_username_field()
-    first_name = get_name_field('first name')
-    last_name = get_name_field('last name')
-    current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
-
+class UpdateUserForm(UsernameFieldForm, NamesFieldsForm, CurrentPasswordFieldForm, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'current_password']
@@ -137,9 +174,7 @@ class UpdateUserForm(forms.ModelForm):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
 
-class DeleteUserForm(forms.ModelForm):
-    current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
-
+class DeleteUserForm(CurrentPasswordFieldForm, forms.ModelForm):
     class Meta:
         model = User
         fields = ['current_password']
@@ -150,9 +185,7 @@ class DeleteUserForm(forms.ModelForm):
             raise ValidationError(ERROR_MESSAGE_INCORRECT_PASSWORD, code='password_invalid')
         return current_password
 
-class UpdateEmailForm(forms.ModelForm):
-    email = get_email_field()
-    current_password = get_password_field(is_confirmation=True, is_new=False, help_text_active=True)
+class UpdateEmailForm(EmailFieldForm, CurrentPasswordFieldForm, forms.ModelForm):
     class Meta:
         model = User
         fields = ['email','current_password']
@@ -166,14 +199,14 @@ class UpdateProfileForm(forms.ModelForm):
     bio_text = forms.CharField(
         max_length=150,
         required=False,
-        widget=forms.Textarea(attrs={"class":"form-control", 'rows':"3", 'placeholder':_('Enter short biography')}),
+        widget=forms.Textarea(attrs={"class":INPUT_FIELD_HTML_CLASS, 'rows':"3", 'placeholder':_('Enter short biography')}),
         strip=False,
         label=_('Biography'),
     )
     date_of_birth = forms.DateField(
         required=False,
         label=_("Date of birth"), 
-        widget= forms.DateInput(attrs={'type': 'date', 'class':'form-control', 'required': False, })
+        widget= forms.DateInput(attrs={'type': 'date', 'class':INPUT_FIELD_HTML_CLASS, 'required': False, })
     )
     class Meta:
         model = Profile
@@ -184,7 +217,7 @@ class UpdateProfileImageForm(forms.ModelForm):
         required=False,
         max_length=254,
         label=_("Logo image"), 
-        widget= forms.FileInput(attrs={'class':'form-control', 'required': False, })
+        widget= forms.FileInput(attrs={'class':INPUT_FIELD_HTML_CLASS, 'required': False, })
     )
     
     class Meta:
