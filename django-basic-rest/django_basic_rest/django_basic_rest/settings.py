@@ -29,8 +29,8 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # Application definition
 
 INSTALLED_APPS = [
-    'app1',
     'accounts',
+    'app1',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -117,10 +117,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
-#     'accounts.authentication.EmailAuthBackend'
-# ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
+    'accounts.authentication.EmailAuthBackend'
+]
 
 AUTH_USER_MODEL = 'accounts.User'
 # LOGIN_URL='/accounts/login/'
@@ -152,3 +152,6 @@ MEDIA_URL = env('MEDIA_URL')
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Custon settings
+SITE_DOMAIN_NAME = env('SITE_DOMAIN_NAME')
