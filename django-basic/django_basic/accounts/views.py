@@ -40,7 +40,6 @@ class RegisterView(CreateView):
     template_name = REGISTER_USER_TEMPLATE_FILE
     def form_valid(self, form):
         user = form.save()
-        Profile.objects.create(user=user)
         context = {}
         context['new_user_name'] = form.cleaned_data['username']
         context['new_user_email'] = form.cleaned_data['email']
