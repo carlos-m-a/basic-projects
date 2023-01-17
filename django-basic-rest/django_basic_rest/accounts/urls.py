@@ -6,4 +6,6 @@ from . import views
 
 urlpatterns = [
     path('auth-token/', obtain_auth_token, name='auth-token'),
+    path("user/",views.UserDetailAPI.as_view()),
+    path('register/', views.RegisterUserAPIView.as_view()),
 ]
