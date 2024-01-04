@@ -36,6 +36,7 @@ Files:
 * **index.html**: Main entry point of your web
 * **/folder1/other1.html**: Example of a new html file
 * **/assets/js/main.js**: Entry point js file
+* **/assets/js/functions.js**: Functions library for every function called by a event (with a good example for calling APIs using Javascript).
 * **/assets/css/main.css**: Entry point css file
 
 
