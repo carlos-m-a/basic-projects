@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Short descriptin">
+    <meta name="keywords" content="....,  ....,   .....">
+    <meta name="robots" content="..., ...">
+
+    <link rel="stylesheet" type="text/css" href="./main.css">
+    <script src="./main.js"></script>
+
+
+    <title>Page Title</title>
+
+</head>
+
+<body>
+
+    <h1>Form</h1>
+
+
+    <div class="basic-div"> 
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <label for="name">Username:</label><br>
+            <input type="text" id="name" name="name" class="input-field" required><br>
+            <label for="name" class="error"> Error:  name </label><br>
+
+            <br>
+
+            <label for="password"> Password: </label><br>
+            <input type="password" id="password" name="password" class="input-field" required><br>
+            <label for="password" class="error"> Error: password </label><br>
+
+            <br>
+
+            <label for="number" step="1">Service Now ID Number (CHG-XXXX):</label><br>
+            <input type="number" id="number" name="number" class="input-field" required><br>
+            <label for="number" class="error"> Error: number </label><br>
+
+            <br>
+
+            <label for="file">File (csv):</label><br>
+            <input type="file" id="file" name="file" accept=".csv, text/csv" class="input-field" required><br>
+            <label for="file" class="error"> Error: file </label><br>
+
+            <br>
+
+            <input type="checkbox" id="commit" name="commit" value="True">
+            <label for="commit">Commit changes</label> <br>
+            
+            <br>
+
+            <label for="file" class="error"> Error in form </label><br>
+
+
+            <div id="processing_request">
+                <div class="loader-1"></div>   <div id="loader-2" class="loader-2">&emsp; Processing request... </div> 
+            </div>
+
+            <!-- <input type="submit" id="submitbutton" value="Send"> -->
+            <button id="submitbutton" onclick="form_submitted()"> Send </button>
+            
+        </form>
+    </div>
+
+</body>
+
+</html>
