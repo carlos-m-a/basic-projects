@@ -27,39 +27,13 @@ Files:
 * **index.html**: Main entry point for navigate to every example
 
 
-## Basic html-css-javascript project structure:
+## Basic html-css-js example structure:
 
 ```bash
-html-css-js-basic
-├── assets
-│   ├── css
-│   │   ├── dark-theme.css
-│   │   └── main.css
-│   ├── data
-│   │   ├── data.json
-│   │   └── data-table-1.csv
-│   ├── fonts
-│   │   └── some-font.ttf
-│   ├── images
-│   │   ├── favicon.ico
-│   │   └── logo.png
-│   ├── js
-│   │   ├── functions.js
-│   │   └── main.js
-│   └── vendors
-│       ├── bootstrap.bundle.min.js
-│       ├── bootstrap.min.css
-│       ├── materialize.min.css
-│       └── matierialize.min.js
-├── components
-│   ├── footer.html
-│   └── navbar.html
-├── folder1
-│   ├── other1.html
-│   └── other2.html
-├── folder2
-│   └── other-html.html
-├── index.html
-└── README.md
+html-css-js-examples
+├── example-name
+│   ├── main.css
+│   ├── main.js
+│   └── index.html
 
 ```
