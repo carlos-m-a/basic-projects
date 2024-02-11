@@ -3,6 +3,10 @@
 # 3- Create and activate a virtual env (virtualenv, venv, etc)
 
 SECRET_KEY=
+#True in development, False in production
+DEBUG=True
+#Hosts separated by ',': example.com,127.0.0.1,example1.com
+ALLOWED_HOSTS=
 
 #postgre: django.db.backends.postgresql
 #mariadb-mysql: django.db.backends.mysql
@@ -30,12 +34,6 @@ EMAIL_TIMEOUT=
 #emai addressl that will be in from field in the emails: noreply@mail.com
 DEFAULT_FROM_EMAIL=
 
-#True in development, False in production
-DEBUG=True
-
-#Hosts separated by ',': example.com,127.0.0.1,example1.com
-ALLOWED_HOSTS=
-
 #Internationalization
 #lang: en-us, es-es, etc
 LANGUAGE_CODE=en-us
@@ -50,5 +48,6 @@ STATIC_ROOT=staticfiles/
 # Non-static files (images, pdfs, etc.. that users modify)
 MEDIA_URL=/media/
 
+# CUSTOM VARIABLES
 # Name of your web (not the url, without www or .com)
 SITE_DOMAIN_NAME=
