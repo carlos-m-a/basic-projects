@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools >= 61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python_basic"
+version = "0.0.1"
+readme = "README.md"
+license = {file = "LICENSE"}
+description = ""
+requires-python = ">=3.8"
+dependencies = [
+  "SomeLibrary >= 2.2",
+  "AnotherLibrary >= 4.5.6"
+]
+authors = [
+  { name = "My Name", email = "me@email.com" },
+]
+keywords = ["example1", "example2"]
+
+[project.urls]
+Homepage = "https://github.com/organization/python-basic"
+"Bug Tracker" = "https://github.com/organization/python-basic/issues"
+
+
+[tool.setuptools.packages.find]
+include = ["python_basic*"]
+namespaces = false  # true by default

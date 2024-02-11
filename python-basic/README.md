@@ -25,7 +25,7 @@ Files:
 * **LICENSE**: plaintext file describes the license you’re using
 * **README.md**: a simple presentation and description of your project and instructions for how to install and use the package
 * **requeriments.txt**: list of all the packages needed by your application (it is the result of `pip freeze > requeriments.txt`)
-* **setup.py**: file that helps pip to install the app as a package (used to define dependencies, app data, etc)
+* **pyproject.toml**: file that helps build managers to pack this project (used to define dependencies, app data, etc). Adapted to be built using "setuptools", but others like "hatchling" or "poetry" use the same file.
 
 
 ## Basic python project structure:
@@ -83,5 +83,17 @@ python-basic/
 ├── LICENSE
 ├── README.md
 ├── requirements.txt
-└── setup.py
+└── pyproject.toml
+```
+
+
+## How to generate a package using a build system (setuptools)
+
+Since this repo only uses the `pyproject.toml`, remember to use at least the version 61.0.0 of setuptools, or other package managers or build systems like hatchling, poetry, etc., that only needs `pyproject.toml`. (Modern python packers only needs pyproject.toml, there is no need of setup.py or setup.cfg) 
+
+Remember to modify `pyproject.toml`, remplacing data for your package data. The file is prepared to be used by "setuptools" library. If you want to use other build system, remember to edit the `[build-system]` part.
+
+For building the package:
+```bash
+python -m build
 ```
