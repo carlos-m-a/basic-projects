@@ -1,0 +1,10 @@
+Django
+asgiref
+django-debug-toolbar
+django-environ
+sqlparse
+djangorestframework
+Pillow
+pytz
+# psycopg2
+django-crispy-forms
