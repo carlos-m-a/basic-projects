@@ -13,4 +13,4 @@ class MyModel(models.Model):
     text = models.CharField(max_length=200, blank=False, null=False, default="text example")
 
     def __str__(self):
-        return self.task
+        return self.name

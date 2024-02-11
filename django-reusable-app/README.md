@@ -2,11 +2,39 @@
 
 This is a example of a project with the structure ready for create a Django reusable app. You can just copy-paste this app folders/files, and change the name of the app (now: reusable_app) in every folder/file where it appears.
 
-## Quick start to use / develop
 
-1. Install requirements using pip:
+## How to use this repo as a template
+
+1. Clone this repo
+2. Remove the .git folder
+3. Change repo name and app name
+4. In wrapper/settings.py, change INSTALLED_APPS: reusable_app -> new_app_name
+5. In wrapper/urls.py, change: reusable_app -> new_app_name
+6. Inside new_app_name folder, remember to change the app name variable in apps.py and urls.py
+6. git init .
+7. Remember modify pyproject.toml with your new repo name and app name
+
+
+## Quick start to develop
+
+1. Install requirements using pip (Remember to create you virtual environment):
 
     pip install -r requirements.txt
+
+2. Copy-paste env-variables-example.txt inside "wrapper" folder, and change the name to ".env"
+
+3. Edit ".env" file, adapting it to your local context
+
+4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
+
+5. Start the development server and visit this link (http://127.0.0.1:8000/auth/login/) to check everything is running ok.
+
+
+## Quick start to use in your project
+
+1. Install the app (you need a dist version of the app, "django-reusable-app" is just an example):
+
+    pip install django-reusable-app
 
 2. Add "reusable_app" to your INSTALLED_APPS setting like this::
 
@@ -22,7 +50,7 @@ This is a example of a project with the structure ready for create a Django reus
 
 4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
 
-5. Start the development server and visit admin site (e.g. http://127.0.0.1:8000/admin/) to create a voting (you'll need the Admin app enabled).
+5. Start the development server and visit this link (http://127.0.0.1:8000/auth/login/) to check everything is running ok.
 
 
 ## How to add this app inside your Django project as a git submodule

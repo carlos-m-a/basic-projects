@@ -6,7 +6,7 @@ from django.http import Http404
 from django.views import generic
 from django.urls import reverse_lazy
 
-import models, forms, serializers
+from . import models, forms, serializers
 # Create your views here.
 
 class MyModelListApiView(APIView):
@@ -30,8 +30,8 @@ class MyModelDetailApiView(APIView):
             raise Http404
 
     def get(self, request, mymodel_id, format=None):
-        note = self.get_object(mymodel_id)
-        serializer = serializers.MySerializer(note)
+        mymodel = self.get_object(mymodel_id)
+        serializer = serializers.MySerializer(mymodel)
         return Response(serializer.data)
     
 
@@ -41,13 +41,12 @@ class MyModelListView(generic.ListView):
     model = models.MyModel
 
     def get_queryset(self):
-        return self.model.objects.filter(owner=self.request.user.id)
+        return self.model.objects.all()
 
 class MyModelCreateView(generic.CreateView):
     template_name = 'reusable_app/my_model_form.html'
     model = models.MyModel
     form_class = forms.MyForm
-    success_url = reverse_lazy('app1:my_model_list')
+    success_url = reverse_lazy('reusable_app:my_model_list')
     def form_valid(self, form):
-        form.instance.owner = self.request.user
         return super().form_valid(form)

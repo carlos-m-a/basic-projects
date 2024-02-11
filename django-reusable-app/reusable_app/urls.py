@@ -1,6 +1,8 @@
 from django.urls import path, include
 from . import views
 
+app_name = 'reusable_app'
+
 urlpatterns = [
     # For API - rest framework
     path('mymodel/', views.MyModelListApiView.as_view()),

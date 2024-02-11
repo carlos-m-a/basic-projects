@@ -7,4 +7,3 @@ djangorestframework
 Pillow
 pytz
 # psycopg2
-django-crispy-forms
