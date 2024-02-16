@@ -6,4 +6,4 @@ sqlparse
 djangorestframework
 Pillow
 pytz
-# psycopg2
+psycopg2

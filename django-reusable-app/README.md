@@ -15,6 +15,20 @@ This is a example of a project with the structure ready for create a Django reus
 7. Remember modify pyproject.toml with your new repo name and app name
 
 
+## How to run using Docker
+
+Docker files (Dockerfile, docker-compose.yml, .env.dev) are ready to use.
+
+To run the containers: `docker compose up -d --build`
+
+Now wait and go to http://localhost:8000/reusable_app/my_model_list/ to check if it runs correctly.
+
+To stop and remove everything: `docker compose down -v --rmi "local"`
+
+To stop and don't remove the data in the database for the next compose up: `docker compose down --rmi "local"`
+
+That's it, docker makes things easy.
+
 ## Quick start to develop
 
 1. Install requirements using pip (Remember to create you virtual environment):
@@ -24,29 +38,6 @@ This is a example of a project with the structure ready for create a Django reus
 2. Copy-paste env-variables-example.txt inside "wrapper" folder, and change the name to ".env"
 
 3. Edit ".env" file, adapting it to your local context
-
-4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
-
-5. Start the development server and visit this link (http://127.0.0.1:8000/auth/login/) to check everything is running ok.
-
-
-## Quick start to use in your project
-
-1. Install the app (you need a dist version of the app, "django-reusable-app" is just an example):
-
-    pip install django-reusable-app
-
-2. Add "reusable_app" to your INSTALLED_APPS setting like this::
-
-    INSTALLED_APPS = [
-        ...
-        'reusable_app',
-        ...
-    ]
-
-3. Include the polls URLconf in your project urls.py like this::
-
-    path('reusable_app/', include('reusable_app.urls')),
 
 4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
 
@@ -91,7 +82,7 @@ urlpatterns = [
 ```
 
 
-## How to generate a package using a build system (And import to django)
+## How to generate a python package using a build system (And import to django)
 
 Since this repo only uses the `pyproject.toml`, remember to use at least the version 61.0.0 of setuptools, or other package managers or build systems like hatchling, poetry, etc., that only needs `pyproject.toml`. (Modern python packers only needs pyproject.toml, there is no need of setup.py or setup.cfg) 
 
@@ -101,3 +92,28 @@ For building the package:
 ```bash
 python -m build
 ```
+
+
+## Quick start to use in your project
+
+Fist you need to check the section "How to generate a python package using a build system"
+
+1. Install the app (you need a dist version of the app, "django-reusable-app" is just an example):
+
+    pip install django-reusable-app
+
+2. Add "reusable_app" to your INSTALLED_APPS setting like this::
+
+    INSTALLED_APPS = [
+        ...
+        'reusable_app',
+        ...
+    ]
+
+3. Include the polls URLconf in your project urls.py like this::
+
+    path('reusable_app/', include('reusable_app.urls')),
+
+4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
+
+5. Start the development server and visit this link (http://127.0.0.1:8000/auth/login/) to check everything is running ok.
