@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.conf import settings
 
+
 class User(AbstractUser): 
     email = models.EmailField(
         _("email address"),
@@ -16,48 +17,60 @@ class User(AbstractUser):
     )
 
 
-class Profile(models.Model):
+class RegistrationRequest(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         null=False, 
-        related_name='profile'
+        related_name='email_verification'
     )
-    avatar_image = models.ImageField(
-        upload_to='images/', 
-        null=True, 
-        blank=True, 
-        max_length=254
+    status = models.PositiveSmallIntegerField(
+        null=False, 
+        default=0
     )
-    bio_text = models.TextField(
-        blank=True, 
-        max_length=254, 
-        null=True
-    )
-    date_of_birth = models.DateField(
-        null=True, 
-        blank=True
-    )
-
-    def __str__(self):
-        return self.user.username
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
-class Setting(models.Model):
+class EmailVerification(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         null=False, 
-        related_name='setting'
+        related_name='email_verification'
     )
-    activated_email_notifications = models.BooleanField(
+    is_verified = models.BooleanField(
         null=False, 
         default=False
     )
-    language = models.SmallIntegerField(
+    verification_date = models.DateTimeField(
+        null=True
+    )
+    def __str__(self):
+        return self.user.email
+
+
+class EmailVerificationCode(models.Model):
+    email = models.EmailField(
+        max_length=254,
+        unique=True,
+        error_messages={
+            "unique": "A verification with that email already exists.",
+        },
+        blank=False,
+        null=False
+    )
+    code = models.PositiveIntegerField(
         null=False, 
-        default=1
+        default=0
+    )
+    attempt_count = models.PositiveSmallIntegerField(
+        null=False, 
+        default=0
+    )
+    sent_date = models.DateTimeField(
+        null=False
     )
 
     def __str__(self):
-        return self.user.username
+        return self.email
