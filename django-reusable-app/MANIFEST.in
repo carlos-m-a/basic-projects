@@ -5,3 +5,4 @@ recursive-exclude build *
 recursive-exclude scripts *
 
 global-exclude *.pyc *.o
+global-exclude */__pycache__/*
