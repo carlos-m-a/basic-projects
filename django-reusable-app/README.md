@@ -51,7 +51,7 @@ That's it, docker makes things easy.
 
 This sections assumes that the repo https://github.com/username/django-reusable-app exists and have the code of this repo. You would have to create it and put the code there before doing the steps. (Of course, change "username" to the proper one)
 
-Add this repository in you `.gitmodules` file, like this: 
+1. Add this repository in you `.gitmodules` file, like this: 
 ```git
 [submodule "reusable_app"]
 	path = path/to/external/apps/django-reusable-app
@@ -59,13 +59,13 @@ Add this repository in you `.gitmodules` file, like this:
     branch = master
 ```
 
-You can create a soft link to the app folder.
+2. You can create a soft link to the app folder.
 Inside the same folder where `manage.py` is, do this (linux):
 ```bash
 ln -s path/to/external/apps/django-reusable-app/reusable_app reusable_app
 ```
 
-Remember to modify the next files: 
+3. Remember to modify the next files: 
 
 In `settings.py`:
 ```python
@@ -129,7 +129,7 @@ Fist you need to check the last section "How to generate a python package using 
         ...
     ]
 
-3. Include the polls URLconf in your project urls.py like this::
+3. Include the resusable_app URLconf in your project urls.py like this::
 
     path('reusable_app/', include('reusable_app.urls')),
 
