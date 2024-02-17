@@ -1,0 +1,7 @@
+recursive-include reusable_app *
+prune reusable_app/__pycache__
+recursive-exclude tests *
+recursive-exclude build *
+recursive-exclude scripts *
+
+global-exclude *.pyc *.o

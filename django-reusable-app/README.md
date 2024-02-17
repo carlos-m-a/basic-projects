@@ -88,19 +88,26 @@ Since this repo only uses the `pyproject.toml`, remember to use at least the ver
 
 Remember to modify `pyproject.toml`, remplacing data for your package data. The file is prepared to be used by "setuptools" library. If you want to use other build system, remember to edit the `[build-system]` part.
 
-For building the package:
+For building the package (setuptools):
 ```bash
+python -m pip install --upgrade setuptools
+python -m pip install --upgrade setuptools wheel
 python -m build
+python -m pip install --user dist/django-reusable-app-0.0.1.tar.gz
 ```
 
 
-## Quick start to use in your project
+## Quick start to use in your project when you packed this project
 
 Fist you need to check the section "How to generate a python package using a build system"
 
 1. Install the app (you need a dist version of the app, "django-reusable-app" is just an example):
 
     pip install django-reusable-app
+    
+    or
+
+    python -m pip install --user dist/django-reusable-app-0.0.1.tar.gz
 
 2. Add "reusable_app" to your INSTALLED_APPS setting like this::
 
