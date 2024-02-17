@@ -49,10 +49,12 @@ That's it, docker makes things easy.
 
 ## How to add this app inside your Django project as a git submodule
 
+This sections assumes that the repo https://github.com/username/django-reusable-app exists and have the code of this repo. You would have to create it and put the code there before doing the steps. (Of course, change "username" to the proper one)
+
 Add this repository in you `.gitmodules` file, like this: 
 ```git
 [submodule "reusable_app"]
-	path = path/to/external/apps
+	path = path/to/external/apps/django-reusable-app
 	url = https://github.com/username/django-reusable-app
     branch = master
 ```
@@ -83,6 +85,14 @@ urlpatterns = [
 
 ]
 ```
+
+4. (Optional) You can add 'reusable_app.context_processors.base_data' in settings,py -> TEMPLATES -> context_processors. (it is not needed, you can skip this step)
+
+4. Run  ``python manage.py makemigrations`` and ``python manage.py migrate`` to create the tables in the data base.
+
+5. Run `python manage.py collectstatic` if necessary.
+
+6. Start the development server and visit this link (http://localhost:8000/reusable_app/my_model_list/) to check that everything is running ok.
 
 
 ## How to generate a python package using a building system (And import it to your django project)
