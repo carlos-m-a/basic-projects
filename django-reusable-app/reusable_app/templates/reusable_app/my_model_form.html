@@ -4,9 +4,12 @@
 
 {% block content %} 
       
+    {% load static %}
 
     <div class="container mt-3 mb-3">
-        <h1>My model</h1>
+        <h1>My model 
+            <img src="{% static 'reusable_app/pythonlogo.jpg' %}" alt="Python logo" width="30" height="30">
+        </h1>
         <form   method="post" class="post-form">
             <div class="mb-2">
                 {% csrf_token %}

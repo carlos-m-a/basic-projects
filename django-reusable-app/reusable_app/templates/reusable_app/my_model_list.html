@@ -4,9 +4,12 @@
 
 {% block content %} 
    
+    {% load static %}
 
     <div class="container mt-3 mb-3">
-        <h1>List my model</h1>
+        <h1>List my model
+            <img src="{% static 'reusable_app/pythonlogo.jpg' %}" alt="Python logo" width="30" height="30">
+        </h1>
         <ul>
         {% for my_model in mymodel_list%}
             <li>{{my_model}}</li>
