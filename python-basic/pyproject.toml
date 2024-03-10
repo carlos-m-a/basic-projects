@@ -25,4 +25,3 @@ Homepage = "https://github.com/organization/python-basic"
 
 [tool.setuptools.packages.find]
 include = ["python_basic*"]
-namespaces = false  # true by default

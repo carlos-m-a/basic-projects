@@ -93,7 +93,11 @@ Since this repo only uses the `pyproject.toml`, remember to use at least the ver
 
 Remember to modify `pyproject.toml`, remplacing data for your package data. The file is prepared to be used by "setuptools" library. If you want to use other build system, remember to edit the `[build-system]` part.
 
-For building the package:
+For building the package (setuptools):
 ```bash
+python -m pip install --upgrade pip setuptools wheel
 python -m build
+
+# And to install the package
+python -m pip install --user dist/python-basic-0.0.1.tar.gz
 ```
