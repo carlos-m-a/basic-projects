@@ -1,1 +1,0 @@
-SOME_SETTING = 'some setting value'

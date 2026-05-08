@@ -10,7 +10,7 @@ Typical usage example:
   myobject = MyClass()
   bar = myobject.public_method()
 """
-
+from collections.abc import Iterator
 
 CONSTANT_VARIABLE = 3.1416
 """int: Module level variable documented inline.
@@ -27,8 +27,8 @@ module_level_variable = 98765
 def model_function(param1: int, param2: str) -> bool:
     """Module level function documented inline.
 
-    Here longer description of the function. Function parameters should be 
-    documented in the ``Args`` section. The name of each parameter is required. 
+    Here longer description of the function. Function parameters should be
+    documented in the ``Args`` section. The name of each parameter is required.
     The type and description of each parameter is optional, but should be included
     if not obvious.
 
@@ -46,7 +46,7 @@ def model_function(param1: int, param2: str) -> bool:
     pass
 
 
-def model_function_yield(param1:int) -> int:
+def model_function_yield(param1:int) -> Iterator[int]:
     """Other function docstring
 
     Args:
@@ -70,7 +70,7 @@ class MyClass:
     Attributes:
         instance_var (int): Some explanation
 
-        class_var (str): Some explanation 
+        class_var (str): Some explanation
     """
 
     class_var = ''
@@ -83,7 +83,7 @@ class MyClass:
 
         This is the further elaboration of the docstring. It could be
         require several lines.
-        
+
         Complexity: T(n) = O(n)  <<average case>>
                     S(n) = O(log n)
                     *n = size of ...
@@ -99,7 +99,7 @@ class MyClass:
             ValueError: If a specific restriction is violated
         """
         return var1 * 1
-    
+
     @classmethod
     def public_class_method(cls, var1:str) -> None:
         """Some doc comments
@@ -112,7 +112,7 @@ class MyClass:
 
     def __str__(self):
         return str(self._instance_var)
-    
+
     @property
     def instance_var(self):
         return self._instance_var
