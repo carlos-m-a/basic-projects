@@ -49,6 +49,7 @@ setup: dev-install
 	@echo "🧩 Setup for development environment..."
 	pre-commit install || true
 	pre-commit install --hook-type commit-msg || true
+	cp .env.example .env
 
 update:
 	@echo "🔄 Updating dependencies..."

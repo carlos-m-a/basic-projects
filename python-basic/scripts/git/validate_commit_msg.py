@@ -1,26 +1,44 @@
 import re
 import sys
 
-# Conventional Commits regex
+MAX_LEN = 100
+
 PATTERN = re.compile(
-    r"^(feat|fix|docs|style|refactor|test|chore|build|ci|perf)(\(.+\))?: .{1,72}$"
+    rf"^(feat|fix|docs|style|refactor|test|chore|build|ci|perf)"
+    rf"(\([a-z0-9\-_]+\))?: .{{1,{MAX_LEN}}}$"
+)
+
+IGNORED_PREFIXES = (
+    "Merge",
+    "Revert",
+    "Release",
+    "fixup!",
+    "squash!",
+    "Initial commit",
 )
 
 def main():
     commit_msg_file = sys.argv[1]
 
     with open(commit_msg_file, "r", encoding="utf-8") as f:
-        msg = f.read().strip()
+        lines = f.read().splitlines()
 
-    # Ignorar merge commits automáticamente
-    if msg.startswith("Merge"):
+    # ignorar comentarios git (# ...)
+    lines = [line for line in lines if line and not line.startswith("#")]
+
+    if not lines:
         return 0
 
-    if not PATTERN.match(msg):
-        print("\n❌ Invalid commit message format")
-        print("\nExpected format:")
-        print("  type(scope): description")
-        print("\nExamples:")
+    subject = lines[0].strip()
+
+    if subject.startswith(IGNORED_PREFIXES):
+        return 0
+
+    if not PATTERN.match(subject):
+        print("\n❌ Invalid commit message format\n")
+        print("Expected:")
+        print("  type(scope): description\n")
+        print("Examples:")
         print("  feat(auth): add login system")
         print("  fix(api): handle null response\n")
         sys.exit(1)
@@ -29,4 +47,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
