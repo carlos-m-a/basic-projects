@@ -47,9 +47,9 @@ dev-install: install
 
 setup: dev-install
 	@echo "🧩 Setup for development environment..."
+	cp -n .env.example .env || true
 	pre-commit install || true
 	pre-commit install --hook-type commit-msg || true
-	cp .env.example .env
 
 update:
 	@echo "🔄 Updating dependencies..."
@@ -98,6 +98,27 @@ check: lint test typecheck
 build:
 	@echo "📦 Building package..."
 	uv build
+
+
+# ---------------------------------------------------------
+# Docker
+# ---------------------------------------------------------
+
+docker-build:
+ifneq ($(DOCKER),)
+	@echo "Building Docker image..."
+	docker build -t $(APP_NAME) deploy/docker/Dockerfile .
+else
+	@echo "Docker not installed."
+endif
+
+docker-run:
+ifneq ($(DOCKER),)
+	@echo "Running Docker container..."
+	docker run --rm -it $(APP_NAME)
+else
+	@echo "Docker not installed."
+endif
 
 # -------------------------
 # CLEAN

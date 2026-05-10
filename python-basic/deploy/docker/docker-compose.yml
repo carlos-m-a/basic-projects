@@ -16,5 +16,10 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
+      PORT: "3000" # port, if you are running a server
+
+    # port mapping if you are running a server
+    ports:
+      - "3000:3000"
 
     tty: true
