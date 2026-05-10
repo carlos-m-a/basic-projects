@@ -13,6 +13,8 @@ APP_NAME := app_name
 SRC_DIR := src
 TEST_DIR := tests
 
+.PHONY: install setup dev build run test lint format check clean ci docker-build docker-run env version
+
 # Detection additional tools
 DOCKER := $(shell command -v docker 2> /dev/null)
 COMPOSE := $(shell command -v docker-compose 2> /dev/null)
@@ -54,9 +56,9 @@ install:
 setup: install
 	@echo "Project setup..."
 	# Example:
+	cp -n .env.example .env || true
 	pre-commit install || true
 	pre-commit install --hook-type commit-msg || true
-	cp .env.example .env
 
 dev:
 	@echo "Starting development environment..."
@@ -95,15 +97,15 @@ check: lint test
 # ---------------------------------------------------------
 
 docker-build:
-ifdef DOCKER
+ifneq ($(DOCKER),)
 	@echo "Building Docker image..."
-	docker build -t $(APP_NAME) .
+	docker build -t $(APP_NAME) deploy/docker/Dockerfile .
 else
 	@echo "Docker not installed."
 endif
 
 docker-run:
-ifdef DOCKER
+ifneq ($(DOCKER),)
 	@echo "Running Docker container..."
 	docker run --rm -it $(APP_NAME)
 else
@@ -120,18 +122,7 @@ clean:
 	rm -rf dist
 	rm -rf build
 	rm -rf coverage
-	rm -rf .pytest_cache
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
 ci: install lint test
 	@echo "CI checks passed."
-
-# ---------------------------------------------------------
-# Utilities
-# ---------------------------------------------------------
-
-env:
-	@echo "Using env file: $(ENV_FILE)"
-
-version:
-	@echo "$(APP_NAME)"
