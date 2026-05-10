@@ -1,63 +1,113 @@
-# --- Configuration ---
 .DEFAULT_GOAL := help
-PYTHON        := uv run
-APP_NAME      := python_basic # Update this to match your actual application name (the directory in src/)
-SRC_DIR       := src
-TEST_DIR      := tests
 
-.PHONY: help install update run test lint format clean build shell
+RUN := uv run
+APP_NAME := app_name
+SRC_DIR := src
+TEST_DIR := tests
 
-# --- Help System ---
-help: ## Show this help message
-	@echo "Usage: make [command]"
+.PHONY: help install dev-install setup update run shell test lint format check build clean
+
+# -------------------------
+# HELP
+# -------------------------
+
+help:
+	@echo "📖 Usage: make [command]"
 	@echo ""
-	@echo "Commands:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@echo "Core:"
+	@echo "  install        Install runtime dependencies"
+	@echo "  dev-install    Install dev dependencies (tools, tests, lint)"
+	@echo "  setup          Setup git hooks (pre-commit)"
+	@echo ""
+	@echo "Dev:"
+	@echo "  run            Run application (module mode)"
+	@echo "  shell          Open Python shell"
+	@echo "  test           Run tests"
+	@echo "  lint           Run linter (ruff)"
+	@echo "  format         Format code (ruff)"
+	@echo "  typecheck      Run MyPy"
+	@echo "  check          Run lint + test"
+	@echo ""
+	@echo "Other:"
+	@echo "  update         Update dependencies"
+	@echo "  build          Build package"
+	@echo "  clean          Clean cache files"
 
-# --- Installation ---
-install: ## Install dependencies and create virtual environment
-	@echo "🚀 Installing dependencies using uv..."
+# -------------------------
+# INSTALLATION
+# -------------------------
+
+install:
+	@echo "📦 Installing runtime dependencies..."
 	uv sync
 
-update: ## Update dependencies to their latest compatible versions
+dev-install: install
+	@echo "🧪 Installing development dependencies..."
+	uv sync --dev
+
+setup: dev-install
+	@echo "🧩 Setup for development environment..."
+	pre-commit install || true
+	pre-commit install --hook-type commit-msg || true
+
+update:
 	@echo "🔄 Updating dependencies..."
 	uv lock --upgrade
-	uv sync
+	uv sync --dev
 
-# --- Development ---
-run: ## Run the application
-	@echo "🏃 Starting $(APP_NAME)..."
-	$(PYTHON) python $(SRC_DIR)/$(APP_NAME)/main.py
+# -------------------------
+# RUNTIME
+# -------------------------
 
-shell: ## Open a Python REPL in the current environment
-	$(PYTHON) python
+run:
+	@echo "🚀 Running application (module mode)..."
+	$(RUN) python -m $(APP_NAME).main
 
-# --- Quality Assurance (QA) ---
-test: ## Run tests using pytest
+shell:
+	@echo "🐍 Opening Python shell..."
+	$(RUN) python
+
+# -------------------------
+# QUALITY
+# -------------------------
+
+test:
 	@echo "🧪 Running tests..."
-	$(PYTHON) pytest $(TEST_DIR) --cov=$(SRC_DIR) --cov-report=term-missing
+	$(RUN) pytest $(TEST_DIR)
 
-lint: ## Run static analysis (Ruff)
-	@echo "🔍 Linting code with Ruff..."
-	$(PYTHON) ruff check $(SRC_DIR) $(TEST_DIR)
+lint:
+	@echo "🔍 Running Ruff..."
+	$(RUN) ruff check $(SRC_DIR) $(TEST_DIR)
 
-format: ## Format code (Ruff)
+format:
 	@echo "🎨 Formatting code..."
-	$(PYTHON) ruff format $(SRC_DIR) $(TEST_DIR)
+	$(RUN) ruff format $(SRC_DIR) $(TEST_DIR)
 
-check: lint test ## Run all checks (lint + test)
+typecheck:
+	@echo "Running MyPy..."
+	$(RUN) mypy $(SRC_DIR)
 
-# --- Build & Distribution ---
-build: ## Build the project (sdist and wheel)
+check: lint test typecheck
+	@echo "✅ All checks passed!"
+
+# -------------------------
+# BUILD
+# -------------------------
+
+build:
 	@echo "📦 Building package..."
 	uv build
 
-# --- Cleanup ---
-clean: ## Remove temporary files and caches
-	@echo "🧹 Cleaning up..."
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
-	find . -type d -name ".pytest_cache" -exec rm -rf {} +
-	find . -type d -name ".ruff_cache" -exec rm -rf {} +
-	find . -type d -name ".coverage" -exec rm -rf {} +
-	rm -rf dist/ .venv/
+# -------------------------
+# CLEAN
+# -------------------------
+
+clean:
+	@echo "🧹 Cleaning cache files..."
+	find . -type d -name "__pycache__" -delete
+	find . -type d -name ".pytest_cache" -delete
+	find . -type d -name ".ruff_cache" -delete
+	find . -type d -name "*.egg-info" -delete
+	rm -rf dist/
+	rm -rf build/
+	@echo "✨ Clean complete"
