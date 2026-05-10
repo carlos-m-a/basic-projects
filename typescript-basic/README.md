@@ -1,13 +1,11 @@
-# Generic Basic Project Structure
+# Typescript Basic Project Structure
 
 ## Description
 
-Template repo for every language o technology
+Template repo for typescript language projects
 
 
 ## Folders and Files
-
-[Helpful doc](https://realpython.com/python-application-layouts/)
 
 Folder:
 * **config**: Archives for configuration and setup (yaml, json)
@@ -26,7 +24,7 @@ Files:
 * **.pre-commit-config.yaml**: describe the checks to do before allowing new git commit
 
 
-## Basic python project structure:
+## Basic project structure:
 
 ```bash
 generic-basic/
@@ -35,7 +33,7 @@ generic-basic/
 ├── deploy
 ├── docs
 ├── scripts
-├── src/app_name
+├── src
 │   ├── package_1
 │   ├── package_2
 │   ├── shared
@@ -54,5 +52,7 @@ generic-basic/
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── Makefile
+├── package.json
+├── tsconfig.json
 └── README.md
 ```

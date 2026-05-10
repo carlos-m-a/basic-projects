@@ -26,7 +26,7 @@ Files:
 * **.pre-commit-config.yaml**: describe the checks to do before allowing new git commit
 
 
-## Basic python project structure:
+## Basic project structure:
 
 ```bash
 generic-basic/
