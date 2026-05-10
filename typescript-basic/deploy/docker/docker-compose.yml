@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: ts_app
+
+    working_dir: /app
+
+    volumes:
+      - .:/app
+      # Anonymous volume: prevents your local node_modules 
+      # from overwriting the ones installed inside the container
+      - /app/node_modules
+
+    # Using 'tsx' for live-reload in development
+    command: npx tsx watch src/index.ts
+
+    environment:
+      - NODE_ENV=development
+      # Port mapping if you are running a server
+      - PORT=3000
+
+    ports:
+      - "3000:3000"
+
+    tty: true
