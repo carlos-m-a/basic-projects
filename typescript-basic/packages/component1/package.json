@@ -1,0 +1,9 @@
+{
+  "name": "@my_app/component1",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/types.ts",
+  "dependencies": {
+    "jose": "^5.0.0" 
+  }
+}

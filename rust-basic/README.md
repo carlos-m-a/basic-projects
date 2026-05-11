@@ -8,12 +8,13 @@ Template repo for rust language projects
 ## Folders and Files
 
 Folder:
+* **crates**: Source code of Independent Components of the project
 * **config**: Archives for configuration and setup (yaml, json)
 * **data**: DB seeds, CSV catalogs (only text) (used on deploy or initilization, not used for testing)
 * **deploy**: Archives for deploying containers, CI pipelines, etc
 * **docs**: any documentation for internal modules, handbooks, analysis and design documents, etc
 * **scripts**: scripts that helps you in the development and maintenance process (NOT scripts for production use, those ones must be with the source code)
-* **src**: source code of your application
+* **src**: source code of your main application
 * **src/package_hexagonal**: package to follow hexagonal+DDD+EDA architecture
 * **tests**: contains every test of your app (unit, integration, functional and other tests)
 * **tests/data**: raw data useful for testing (json, csv)

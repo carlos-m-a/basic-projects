@@ -3,5 +3,24 @@ name = "my_app"
 version = "0.1.0"
 edition = "2025"
 
+[workspace]
+# Every crate or lib that is his own project and compiles separately
+members = [
+    "crates/component_1",
+    "crates/component_2_hexagonal",
+    "crates/shared",
+]
+
+# Dependencies used in src/
 [dependencies]
+# Internal
+component_1 = { path = "crates/component_1" }
+component_2_hexagonal = { path = "crates/component_2_hexagonal" }
+shared = { path = "crates/shared" }
+# External
 serde = { version = "1.0", features = ["derive"] }
+
+# External dependencies used in crates/
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.35", features = ["full"] }
