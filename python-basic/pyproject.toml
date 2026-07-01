@@ -20,8 +20,8 @@ dependencies = [
 # -------------------------
 # UV DEV DEPENDENCIES
 # -------------------------
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pre-commit",
     "pytest",
     "pytest-cov",
