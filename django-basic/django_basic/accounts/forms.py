@@ -1,8 +1,16 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField, PasswordChangeForm, PasswordResetForm, SetPasswordForm
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+    SetPasswordForm,
+    UserCreationForm,
+    UsernameField,
+)
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
 from .models import Profile
 
 ERROR_MESSAGE_INCORRECT_PASSWORD = _('Incorrect password')
@@ -49,7 +57,7 @@ class CurrentPasswordFieldForm(forms.Form):
 class UsernameFieldForm(forms.Form):
     username = UsernameField(
             required=True,
-            max_length=150,
+            max_length=30,
             widget=forms.TextInput(attrs={"autofocus": True, "class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter username')}),
             strip=False,
             label=_("Username"),
@@ -65,14 +73,14 @@ class EmailFieldForm(forms.Form):
 
 class NamesFieldsForm(forms.Form):
     first_name = forms.CharField(
-        max_length=150,
+        max_length=120,
         required=False,
         widget=forms.TextInput(attrs={"class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter first name')}),
         strip=False,
         label=_('First name'),
     )
     last_name = forms.CharField(
-        max_length=150,
+        max_length=120,
         required=False,
         widget=forms.TextInput(attrs={"class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter last name')}),
         strip=False,
@@ -90,7 +98,7 @@ class NewAuthenticationForm(AuthenticationForm):
         widget=forms.TextInput(attrs={"autofocus": True, "class":INPUT_FIELD_HTML_CLASS, 'placeholder':_('Enter username or email')}),
         required=True,
         strip=False,
-        max_length=254,
+        max_length=30,
         label=_("Username or email"),
     )
     password = forms.CharField(
