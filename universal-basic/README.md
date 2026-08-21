@@ -1,4 +1,4 @@
-# Generic Basic Project Structure
+# universal Basic Project Structure
 
 ## Description
 
@@ -29,7 +29,7 @@ Files:
 ## Basic project structure:
 
 ```bash
-generic-basic/
+universal-basic/
 ├── config
 ├── data
 ├── deploy

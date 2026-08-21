@@ -28,7 +28,7 @@ Files:
 ## Basic project structure:
 
 ```bash
-generic-basic/
+typescript-basic/
 ├── config
 ├── data
 ├── deploy
