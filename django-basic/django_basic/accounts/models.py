@@ -152,9 +152,9 @@ class OrganizationMembership(BaseModel):
     PREFIX = "mem"
 
     class Roles(models.TextChoices):
-        OWNER = 'OWNER', 'Owner'
-        ADMIN = 'ADMIN', 'Admin'
-        MEMBER = 'MEMBER', 'Member'
+        OWNER = 'owner', 'Owner'
+        ADMIN = 'admin', 'Admin'
+        MEMBER = 'member', 'Member'
 
     organization = models.ForeignKey(
         Organization,
@@ -171,6 +171,12 @@ class OrganizationMembership(BaseModel):
         choices=Roles.choices,
         default=Roles.MEMBER
     )
+    user_external_id = models.CharField(
+        required=False,
+        null=True,
+        blank=True,
+        max_length=64,
+    )
 
     class Meta:
         unique_together = ('organization', 'user')
@@ -178,6 +184,10 @@ class OrganizationMembership(BaseModel):
     def __str__(self):
         return f"{self.user} - {self.organization} ({self.role})"
 
+
+######################################################
+##               Useful Models                      ##
+######################################################
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -211,12 +221,6 @@ class Profile(models.Model):
     description_text = models.CharField(
         blank=True, 
         max_length=254, 
-        null=True
-    )
-    # Inside organizations, normally users has a organization id, different from database id
-    other_id = models.CharField(
-        blank=True, 
-        max_length=128, 
         null=True
     )
 
