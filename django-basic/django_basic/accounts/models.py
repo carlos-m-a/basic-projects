@@ -172,7 +172,6 @@ class OrganizationMembership(BaseModel):
         default=Roles.MEMBER
     )
     user_external_id = models.CharField(
-        required=False,
         null=True,
         blank=True,
         max_length=64,
