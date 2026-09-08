@@ -21,7 +21,9 @@ username_validator = UsernameValidator()
 
 # DELETE ONE OPTION OR OTHER DEPENDING OF THE TYPE OF SYSTEM:
 # B2O (business to organizacions = B2B)
+#  - Managed users, organizations, maybe no autoregistration
 # B2P (business to people = B2C)
+#  - Independen users, no orgs, autoregistration, no managed users
 
 
 ######################################################
