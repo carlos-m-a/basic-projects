@@ -191,6 +191,10 @@ class OrganizationMembership(BaseModel):
 ######################################################
 
 class Profile(models.Model):
+    class Genres(models.TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+        NO_ANSWER = 'no_answer', 'No answer'
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
@@ -209,9 +213,10 @@ class Profile(models.Model):
         null=True, 
         blank=True
     )
-    sex_or_genre = models.PositiveSmallIntegerField(
-        null=False, 
-        default=1
+    sex_or_genre = models.CharField(
+        max_length=15,
+        choices=Genres.choices,
+        default=Genres.NO_ANSWER
     )
     avatar_image = models.ImageField(
         upload_to='images/', 
@@ -230,6 +235,9 @@ class Profile(models.Model):
 
 
 class Setting(models.Model):
+    class Theme(models.TextChoices):
+        LIGHT = 'light', 'Light'
+        DARK = 'dark', 'Dark'
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
@@ -237,13 +245,13 @@ class Setting(models.Model):
         related_name='setting'
     )
     # Dark or light theme, for example
-    frontend_theme = models.PositiveSmallIntegerField(
-        null=False, 
-        default=1
+    frontend_theme = models.CharField(
+        max_length=15,
+        choices=Theme.choices,
+        default=Theme.LIGHT
     )
-    language = models.PositiveSmallIntegerField(
-        null=False, 
-        default=1
+    language = models.CharField(
+        max_length=15,
     )
     time_zone = models.PositiveSmallIntegerField(
         null=False, 
