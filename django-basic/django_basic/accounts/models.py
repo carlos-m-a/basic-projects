@@ -66,6 +66,32 @@ class User(BaseModel, AbstractUser):
 ######################################################
 ##              For B2O (=B2B)                      ##
 ######################################################
+class Organization(BaseModel):
+    PREFIX = "org"
+    name = models.CharField(max_length=120)
+    # like username, e.g. "acme_corp"
+    handle = models.CharField(
+        max_length=30,
+        unique=True,
+        validators=[username_validator],
+        error_messages={
+            "unique": _("An organization with that handle already exists."),
+        },
+    )
+    domain = models.CharField(max_length=255, blank=True, null=True)
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Indica si la organización está activa o suspendida."
+    )
+    group = models.OneToOneField(
+        Group,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="organization"
+    )
+    def __str__(self):
+        return self.name
 
 class User(BaseModel, AbstractUser):
     PREFIX = "usr"
@@ -88,6 +114,14 @@ class User(BaseModel, AbstractUser):
     last_name = models.CharField(_("last name"), max_length=120, blank=True)
 
     # 2. Flags for B2O - B2B
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="users",
+        verbose_name=_("Organization"),
+    )
     is_sso_only = models.BooleanField(
         default=False,
         help_text="If True, only SSO login is allowed, password login is forbidden."
@@ -122,41 +156,15 @@ class User(BaseModel, AbstractUser):
         return self.email
 
 
-class Organization(BaseModel):
-    PREFIX = "org"
-    name = models.CharField(max_length=120)
-    # like username, e.g. "acme_corp"
-    handle = models.CharField(
-        max_length=30,
-        unique=True,
-        validators=[username_validator],
-        error_messages={
-            "unique": _("An organization with that handle already exists."),
-        },
-    )
-    domain = models.CharField(max_length=255, blank=True, null=True)
-    is_active = models.BooleanField(
-        default=True,
-        help_text="Indica si la organización está activa o suspendida."
-    )
-    group = models.OneToOneField(
-        Group,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="organization"
-    )
-    def __str__(self):
-        return self.name
-
-
-class OrganizationMembership(BaseModel):
+class Membership(BaseModel):
     PREFIX = "mem"
 
     class Roles(models.TextChoices):
         OWNER = 'owner', 'Owner'
         ADMIN = 'admin', 'Admin'
         MEMBER = 'member', 'Member'
+        VIEWER = 'viewer', 'Viewer'
+        GUEST = 'guest', 'Guest'
 
     organization = models.ForeignKey(
         Organization,
